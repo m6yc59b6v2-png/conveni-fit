@@ -14,13 +14,12 @@
       "carbs": null,
       "source_url": "https://www.sej.co.jp/products/a/item/250701/",
       "verified_at": "2026-10-10",
-      "verified_at": "2026-10-10",
-"status": "verified",
-"allergens": ["鶏肉"],
-"source_evidence": "セブンイレブン公式商品ページで価格・栄養成分を確認",
-"reviewed_by": "yura"
-},
-      ]
+      "status": "verified",
+      "allergens": [
+        "鶏肉"
+      ],
+      "source_evidence": "https://www.sej.co.jp/products/a/item/250701/",
+      "reviewed_by": "yura"
     },
     {
       "id": "seven-egg",
@@ -35,8 +34,7 @@
       "source_url": "https://www.sej.co.jp/products/",
       "verified_at": null,
       "status": "review",
-      "allergens":，"source_evidence": "ローソン公式商品ページで価格・栄養成分を確認",
-"reviewed_by": "yura" [
+      "allergens": [
         "卵"
       ]
     },
@@ -53,8 +51,7 @@
       "source_url": "https://www.family.co.jp/goods.html",
       "verified_at": null,
       "status": "review",
-      "allergens":，"source_evidence": "ローソン公式商品ページで価格・栄養成分を確認",
-"reviewed_by": "yura" [
+      "allergens": [
         "鶏肉"
       ]
     },
@@ -71,8 +68,7 @@
       "source_url": "https://www.family.co.jp/goods.html",
       "verified_at": null,
       "status": "review",
-      "allergens":，"source_evidence": "ローソン公式商品ページで価格・栄養成分を確認",
-"reviewed_by": "yura" [
+      "allergens": [
         "鶏肉"
       ]
     },
@@ -89,8 +85,7 @@
       "source_url": "https://www.lawson.co.jp/recommend/original/",
       "verified_at": null,
       "status": "review",
-      "allergens":，"source_evidence": "ローソン公式商品ページで価格・栄養成分を確認",
-"reviewed_by": "yura" [
+      "allergens": [
         "鶏肉"
       ]
     },
@@ -107,30 +102,29 @@
       "source_url": "https://www.lawson.co.jp/recommend/original/",
       "verified_at": null,
       "status": "review",
-      "allergens":，"source_evidence": "ローソン公式商品ページで価格・栄養成分を確認",
-"reviewed_by": "yura" [
+      "allergens": [
         "卵"
       ]
     },
- {
-  "id": "lawson-rice",
-  "chain": "lawson",
-  "name": "塩にぎり",
-  "category": "staple",
-  "price": 149,
-  "kcal": 173,
-  "protein": 2.9,
-  "fat": 0.9,
-  "carbs": 38.7,
-  "source_url": "https://www.lawson.co.jp/recommend/original/detail/1527622_1996.html",
-  "verified_at": "2026-10-10",
-  "status": "verified",
-  "allergens": [],
-"source_evidence": "ローソン公式商品ページで価格149円、173kcal、たんぱく質2.9g、脂質0.9g、炭水化物38.7gを確認",
-"reviewed_by": "yura"
-},
-{
-  "id": "lawson-bread",
+    {
+      "id": "lawson-rice",
+      "chain": "lawson",
+      "name": "塩にぎり",
+      "category": "staple",
+      "price": 149,
+      "kcal": 173,
+      "protein": 2.9,
+      "fat": 0.9,
+      "carbs": 38.7,
+      "source_url": "https://www.lawson.co.jp/recommend/original/detail/1527622_1996.html",
+      "verified_at": "2026-10-10",
+      "status": "verified",
+      "allergens": [],
+      "source_evidence": "https://www.lawson.co.jp/recommend/original/detail/1527622_1996.html",
+      "reviewed_by": "yura"
+    },
+    {
+      "id": "lawson-bread",
       "chain": "lawson",
       "name": "ブランパン 2個入",
       "category": "staple",
@@ -142,8 +136,7 @@
       "source_url": "https://www.lawson.co.jp/recommend/original/",
       "verified_at": null,
       "status": "review",
-      "allergens":，"source_evidence": "ローソン公式商品ページで価格・栄養成分を確認",
-"reviewed_by": "yura" []
+      "allergens": []
     }
   ]
 }

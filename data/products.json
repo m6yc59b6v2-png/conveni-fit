@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-09T17:52:28+00:00",
+  "updated_at": "2026-10-10T12:00:00+09:00",
   "products": [
     {
       "id": "seven-chicken",
@@ -424,6 +424,86 @@
       "verified_at": "2026-10-10",
       "source_evidence": "https://www.sej.co.jp/products/a/item/044857/",
       "reviewed_by": "ChatGPT (official product page review)"
+    },
+    {
+      "id": "lawson-chicken-umeshiso",
+      "chain": "lawson",
+      "name": "サラダチキン 梅しそ",
+      "category": "protein",
+      "price": 279,
+      "kcal": 130,
+      "protein": 24.9,
+      "fat": 1.7,
+      "carbs": 3.9,
+      "source_url": "https://www.lawson.co.jp/recommend/original/detail/1486002_1996.html",
+      "verified_at": "2026-10-10",
+      "status": "verified",
+      "allergens": [
+        "鶏肉"
+      ],
+      "source_evidence": "https://www.lawson.co.jp/recommend/original/detail/1486002_1996.html",
+      "reviewed_by": "ChatGPT (Lawson official product page)",
+      "region_note": "店舗・地域によって取扱い・栄養成分が異なる場合があります。アレルゲンは店頭ラベルで必ず確認してください。"
+    },
+    {
+      "id": "lawson-chicken-smoke",
+      "chain": "lawson",
+      "name": "サラダチキン スモーク",
+      "category": "protein",
+      "price": 279,
+      "kcal": 120,
+      "protein": 23.8,
+      "fat": 1.4,
+      "carbs": 3,
+      "source_url": "https://mldata.lawson.co.jp/recommend/original/detail/1450533_1996.html",
+      "verified_at": "2026-10-10",
+      "status": "verified",
+      "allergens": [
+        "鶏肉"
+      ],
+      "source_evidence": "https://mldata.lawson.co.jp/recommend/original/detail/1450533_1996.html",
+      "reviewed_by": "ChatGPT (Lawson official product page)",
+      "region_note": "店舗・地域によって取扱い・栄養成分が異なる場合があります。アレルゲンは店頭ラベルで必ず確認してください。"
+    },
+    {
+      "id": "lawson-chicken-herb",
+      "chain": "lawson",
+      "name": "サラダチキン ハーブ",
+      "category": "protein",
+      "price": 279,
+      "kcal": 119,
+      "protein": 23.1,
+      "fat": 1.8,
+      "carbs": 2.7,
+      "source_url": "https://www.lawson.co.jp/sp/recommend/original/detail/1390764_2168.html",
+      "verified_at": "2026-10-10",
+      "status": "verified",
+      "allergens": [
+        "鶏肉"
+      ],
+      "source_evidence": "https://www.lawson.co.jp/sp/recommend/original/detail/1390764_2168.html",
+      "reviewed_by": "ChatGPT (Lawson official product page)",
+      "region_note": "店舗・地域によって取扱い・栄養成分が異なる場合があります。アレルゲンは店頭ラベルで必ず確認してください。"
+    },
+    {
+      "id": "lawson-chicken-spicy",
+      "chain": "lawson",
+      "name": "炭火焼サラダチキン 旨辛",
+      "category": "protein",
+      "price": 268,
+      "kcal": 118,
+      "protein": 15.7,
+      "fat": 4.8,
+      "carbs": 3,
+      "source_url": "https://www.lawson.co.jp/recommend/original/detail/1473229_1996.html",
+      "verified_at": "2026-10-10",
+      "status": "verified",
+      "allergens": [
+        "鶏肉"
+      ],
+      "source_evidence": "https://www.lawson.co.jp/recommend/original/detail/1473229_1996.html",
+      "reviewed_by": "ChatGPT (Lawson official product page)",
+      "region_note": "店舗・地域によって取扱い・栄養成分が異なる場合があります。アレルゲンは店頭ラベルで必ず確認してください。"
     }
   ]
 }

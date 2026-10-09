@@ -78,26 +78,41 @@ function suggest(){
    $('result').innerHTML=`<div class="warning"><strong>現在の予算では3食を組めません。</strong><p>最も安い組み合わせでも1食${yen(cheapest.price)}、3食で${yen(cheapest.price*3)}が必要です。予算を増やすか、条件を変更してください。</p></div>`;
    return;
  }
- const meals=[], used=new Map();
- for(let i=0;i<3;i++){
-   const remaining=budget-meals.reduce((sum,m)=>sum+m.price,0);
-   const possible=options.filter(m=>m.price<=remaining-(2-i)*Math.min(...options.map(x=>x.price)));
-   if(!possible.length)break;
-   const ranked=possible.slice().sort((a,b)=>{
-     const penalty=m=>m.items.reduce((sum,p)=>sum+(used.get(p.id)||0)*180,0);
-     const rotate=m=>m.items.reduce((sum,p)=>sum+p.id.split('').reduce((n,c)=>n+c.charCodeAt(0),0),0)%13;
-     return score(a)+penalty(a)+((rotate(a)+suggestionVariant)%13)*12-(score(b)+penalty(b)+((rotate(b)+suggestionVariant)%13)*12);
-   });
-   const pick=ranked[0];
+
+ const meals=[],used=new Map(),minimumPrice=Math.min(...options.map(x=>x.price));
+ // Optimise the whole day instead of greedily choosing breakfast first.
+ const candidateMeals=options.filter(m=>m.price<=budget-2*minimumPrice);
+ const shortlist=candidateMeals.slice().sort((a,b)=>score(a)-score(b)).slice(0,110);
+ const cheap=options.slice().sort((a,b)=>a.price-b.price).slice(0,60);
+ const candidates=[...new Map([...shortlist,...cheap].map(m=>[m.items.map(p=>p.id).join('|'),m])).values()].slice(0,110);
+ let best=null;
+ for(let i=0;i<candidates.length;i++)for(let j=i;j<candidates.length;j++)for(let k=j;k<candidates.length;k++){
+  const picks=[candidates[i],candidates[j],candidates[k]],sum=picks.reduce((n,m)=>n+m.price,0);
+  if(sum>budget)continue;
+  const counts=new Map();for(const m of picks)for(const p of m.items)counts.set(p.id,(counts.get(p.id)||0)+1);
+  const repeats=[...counts.values()].reduce((n,c)=>n+Math.max(0,c-1),0);
+  const sameMeal=(i===j?1:0)+(j===k?1:0)+(i===k?1:0);
+  const desirability=picks.reduce((n,m)=>n+score(m),0);
+  const tie=((i*17+j*37+k*53+suggestionVariant*101)%29)*.08;
+  const value=repeats*100000+sameMeal*10000+desirability+tie;
+  if(!best||value<best.value)best={value,picks};
+ }
+ if(best){
+  const ordered=best.picks.slice().sort((a,b)=>a.kcal-b.kcal);
+  const rotation=suggestionVariant%3;
+  [ordered[rotation],ordered[(rotation+1)%3],ordered[(rotation+2)%3]].forEach((pick,i)=>{
    meals.push({name:['朝食','昼食','夕食'][i],...pick});
    pick.items.forEach(p=>used.set(p.id,(used.get(p.id)||0)+1));
+  });
  }
+ const repeats=[...used.values()].reduce((n,c)=>n+Math.max(0,c-1),0);
  if(meals.length!==3){$('result').innerHTML='<div class="warning">予算内で3食を組めませんでした。予算を調整してください。</div>';return;}
  const total=meals.reduce((a,m)=>a+m.price,0);
  const kcalTotal=meals.reduce((a,m)=>a+m.kcal,0);
  const proteinTotal=meals.reduce((a,m)=>a+m.protein,0);
  const macro=m=>`${Math.round(m.kcal)}kcal ／ P ${m.protein.toFixed(1)}g ／ F ${m.fat==null?'未確認':m.fat.toFixed(1)+'g'} ／ C ${m.carbs==null?'未確認':m.carbs.toFixed(1)+'g'}`;
  $('result').innerHTML=`<p class="warning">確認済み商品を使った買い物候補です。栄養バランスや必要エネルギーを満たす保証はありません。野菜のドレッシング等は別売の場合があります。地域・店頭表示とアレルゲン情報を必ず確認してください。</p>`+
+ (repeats?`<p class="result-note">※現在の商品数・予算・除外条件では、${repeats}件の商品が別の食事にも登場します。商品が増えると重複を減らせます。</p>`:'<p class="result-note">✨ 同じ商品が重ならない組み合わせを優先しました。</p>')+
  meals.map(m=>`<div class="meal"><h3>${m.name}</h3><ul>${m.items.map(p=>`<li>${escapeHtml(p.name)}（${names[p.chain]}）</li>`).join('')}</ul><div class="totals">${yen(m.price)} ／ ${macro(m)}</div></div>`).join('')+
  `<div class="stat"><strong>1日合計 ${yen(total)} ／ ${Math.round(kcalTotal)}kcal ／ P ${proteinTotal.toFixed(1)}g</strong><p class="small">予算残り ${yen(budget-total)}。1日分の必要栄養量を満たすことを意味しません。</p></div><div class="actions"><button id="copy">買い物メモをコピー</button><button class="secondary" id="another">もう一度提案</button></div>`;
  $('copy').onclick=()=>{const memo=meals.map(m=>m.name+': '+m.items.map(p=>p.name).join('、')).join('\\n')+'\\n合計 '+yen(total);if(navigator.clipboard?.writeText){navigator.clipboard.writeText(memo).then(()=>alert('コピーしました')).catch(()=>prompt('こちらをコピーしてください',memo));}else prompt('こちらをコピーしてください',memo);};

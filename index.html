@@ -35,10 +35,27 @@ button:hover{filter:brightness(1.06)}
 .bmi-marker{background:#49352b}
 a{color:#80513a}
 @media(max-width:560px){.card{border-radius:18px}.app-nav{background:#f7f1e9f2}}
+
+/* 2026 autumn: editorial hero with photography, preserving existing functionality */
+header{gap:15px;align-items:center}
+.logo{display:grid;place-items:center;min-width:60px;height:60px;padding:10px;background:#f8eee3;border:1px solid #e7d7c7}
+.logo svg{width:37px;height:37px}
+header .muted{letter-spacing:.055em;font-size:12px}
+.hero{position:relative;isolation:isolate;min-height:295px;overflow:hidden;border-radius:24px;margin:14px 0 8px;padding:34px 30px 22px;background:#efe0ce}
+.hero:before{content:"";position:absolute;inset:0;z-index:-2;background-image:url("https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=1600&q=85");background-size:cover;background-position:68% 50%}
+.hero:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,#f8eee4 0%,#f8eee4f5 30%,#f8eee4d9 49%,#f8eee433 75%,#f8eee40d 100%)}
+.hero-copy{max-width:560px}
+.hero-eyebrow{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.2em;color:#946e50;margin-bottom:14px}
+.hero h2{font-family:"Hiragino Mincho ProN","Yu Mincho",serif;font-size:clamp(24px,3.8vw,37px);line-height:1.5;letter-spacing:.035em;color:#4e3426}
+.hero p{font-size:14px;color:#654c3d;line-height:1.85;max-width:470px}
+.hero .metrics{max-width:485px;margin-top:24px}
+.hero .metric{background:#fffaf3dd;backdrop-filter:blur(5px);border-color:#e6d6c6}
+.hero .metric strong{color:#76503a}
+@media(max-width:650px){.hero{min-height:330px;padding:26px 19px 19px;border-radius:20px}.hero:before{background-position:72% center}.hero:after{background:linear-gradient(90deg,#f9f0e9 0%,#f9f0e9ed 44%,#f9f0e9a8 72%,#f9f0e958 100%)}.hero-copy{max-width:100%}.hero h2{font-size:clamp(23px,5.8vw,31px)}.hero p{font-size:12px}.hero .metrics{margin-top:23px}.hero .metric{padding:10px 7px}.hero .metric strong{font-size:20px}}
 </style></head><body><main>
-<header><div class="logo">🥗</div><div><h1>Conveni Fit <span class="pill">β版</span></h1><div class="muted">コンビニ食事選びサポート｜ブラウン×アイボリー</div></div></header>
+<header><div class="logo"><svg width="34" height="34" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M39 7C19 8 8 18 8 32c0 6 4 9 10 9C33 41 41 25 39 7Z" stroke="#8e6c51" stroke-width="2.2" stroke-linejoin="round"/><path d="M7 43c7-15 17-24 29-32" stroke="#8e6c51" stroke-width="2.2" stroke-linecap="round"/></svg></div><div><h1>Conveni Fit <span class="pill">β版</span></h1><div class="muted">コンビニで、ちょうどいい食事を。</div></div></header>
 <nav class="app-nav" aria-label="アプリのページ"><button type="button" class="nav-item active" data-page-button="body" aria-current="page">① からだ</button><button type="button" class="nav-item" data-page-button="goal">② 目的</button><button type="button" class="nav-item" data-page-button="meals">③ 献立</button><button type="button" class="nav-item" data-page-button="diary">④ 日記</button><button type="button" class="nav-item" data-page-button="products">⑤ 商品</button></nav>
-<section class="hero"><h2>コンビニでも、<br>自分らしい食事選びを。</h2><p>ダイエットも筋トレも。公式情報を確認した商品から、目的に合う組み合わせを探そう。</p><div class="metrics"><div class="metric"><strong id="metricAll">—</strong><span>登録商品</span></div><div class="metric"><strong id="metricVerified">—</strong><span>確認済み</span></div><div class="metric"><strong>3社</strong><span>対象コンビニ</span></div></div></section><section class="card"><h2>あなたに合った組み合わせを探す</h2><div class="grid">
+<section class="hero"><div class="hero-copy"><span class="hero-eyebrow">YOUR DAILY WELLNESS</span><h2>コンビニで、<br>心と体にやさしい選択を。</h2><p>毎日の食事をもっとかんたんに、もっと健康に。<br>公式情報を確認した商品から、あなたに合う組み合わせを。</p></div><div class="metrics"><div class="metric"><strong id="metricAll">—</strong><span>登録商品</span></div><div class="metric"><strong id="metricVerified">—</strong><span>確認済み</span></div><div class="metric"><strong>3社</strong><span>対象コンビニ</span></div></div></section><section class="card"><h2>あなたに合った組み合わせを探す</h2><div class="grid">
 <div><label for="chain">コンビニ</label><select id="chain"><option value="seven">セブン‐イレブン</option><option value="family">ファミリーマート</option><option value="lawson" selected>ローソン</option><option value="any">3社から選ぶ</option></select></div>
 <div><label for="goal">目標</label><select id="goal"><option value="balance">食生活を整える</option><option value="diet">減量・体脂肪管理</option><option value="muscle">筋肉づくり・増量</option></select></div>
 <div><label for="budget">1日予算（円）</label><input id="budget" type="number" min="300" max="10000" step="100" value="1800"></div>

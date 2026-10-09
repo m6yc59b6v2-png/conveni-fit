@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "updated_at": null,
+  "products": [
+    {
+      "id": "seven-chicken",
+      "chain": "seven",
+      "name": "7プレミアム サラダチキン プレーン",
+      "category": "protein",
+      "price": 279,
+      "kcal": 114,
+      "protein": 24.1,
+      "fat": null,
+      "carbs": null,
+      "source_url": "https://www.sej.co.jp/products/",
+      "verified_at": null,
+      "status": "review",
+      "allergens": [
+        "鶏肉"
+      ]
+    },
+    {
+      "id": "seven-egg",
+      "chain": "seven",
+      "name": "味付き半熟ゆでたまご 1個入",
+      "category": "protein",
+      "price": 106,
+      "kcal": 65,
+      "protein": 5.8,
+      "fat": null,
+      "carbs": null,
+      "source_url": "https://www.sej.co.jp/products/",
+      "verified_at": null,
+      "status": "review",
+      "allergens": [
+        "卵"
+      ]
+    },
+    {
+      "id": "family-chicken",
+      "chain": "family",
+      "name": "国産鶏のサラダチキン 淡路島の藻塩",
+      "category": "protein",
+      "price": 298,
+      "kcal": null,
+      "protein": 20.8,
+      "fat": null,
+      "carbs": null,
+      "source_url": "https://www.family.co.jp/goods.html",
+      "verified_at": null,
+      "status": "review",
+      "allergens": [
+        "鶏肉"
+      ]
+    },
+    {
+      "id": "family-salad",
+      "chain": "family",
+      "name": "サラダチキンのサラダ",
+      "category": "vegetable",
+      "price": 288,
+      "kcal": 60,
+      "protein": 9.4,
+      "fat": null,
+      "carbs": null,
+      "source_url": "https://www.family.co.jp/goods.html",
+      "verified_at": null,
+      "status": "review",
+      "allergens": [
+        "鶏肉"
+      ]
+    },
+    {
+      "id": "lawson-chicken",
+      "chain": "lawson",
+      "name": "サラダチキン プレーン 110g",
+      "category": "protein",
+      "price": 279,
+      "kcal": 141,
+      "protein": 30.3,
+      "fat": null,
+      "carbs": null,
+      "source_url": "https://www.lawson.co.jp/recommend/original/",
+      "verified_at": null,
+      "status": "review",
+      "allergens": [
+        "鶏肉"
+      ]
+    },
+    {
+      "id": "lawson-egg",
+      "chain": "lawson",
+      "name": "からむきゆでたまご",
+      "category": "protein",
+      "price": 157,
+      "kcal": 81,
+      "protein": 7.3,
+      "fat": null,
+      "carbs": null,
+      "source_url": "https://www.lawson.co.jp/recommend/original/",
+      "verified_at": null,
+      "status": "review",
+      "allergens": [
+        "卵"
+      ]
+    },
+    {
+      "id": "lawson-rice",
+      "chain": "lawson",
+      "name": "塩にぎり",
+      "category": "staple",
+      "price": 149,
+      "kcal": 173,
+      "protein": null,
+      "fat": null,
+      "carbs": null,
+      "source_url": "https://www.lawson.co.jp/recommend/original/",
+      "verified_at": null,
+      "status": "review",
+      "allergens": []
+    },
+    {
+      "id": "lawson-bread",
+      "chain": "lawson",
+      "name": "ブランパン 2個入",
+      "category": "staple",
+      "price": 149,
+      "kcal": null,
+      "protein": null,
+      "fat": null,
+      "carbs": null,
+      "source_url": "https://www.lawson.co.jp/recommend/original/",
+      "verified_at": null,
+      "status": "review",
+      "allergens": []
+    }
+  ]
+}

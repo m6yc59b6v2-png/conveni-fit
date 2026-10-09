@@ -1,0 +1,28 @@
+name: Check official source changes
+on:
+  schedule:
+    - cron: "18 2 * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Review-only source monitoring
+        env:
+          ENABLE_SOURCE_CHECK: "false"
+        run: python scripts/check_sources.py
+      - name: Commit review queue when enabled
+        run: |
+          git config user.name "conveni-fit-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/review_queue.json data/source_state.json
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: source change review queue [skip ci]"
+            git push
+          fi

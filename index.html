@@ -1,0 +1,57 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#16734d"><title>Conveni Fit Ver.3</title><style>
+:root{--green:#176d4b;--light:#eaf6ef;--line:#d9e9df;--ink:#1d3329}*{box-sizing:border-box}body{margin:0;background:#f5faf7;color:var(--ink);font-family:system-ui,"Noto Sans JP",sans-serif}main{max-width:960px;margin:auto;padding:25px 16px 65px}header{display:flex;gap:13px;align-items:center}.logo{background:#d6f0df;padding:14px;border-radius:17px;font-size:29px}h1{margin:0;color:var(--green);font-size:27px}h2{font-size:20px;margin:0 0 14px}p{line-height:1.7}.muted{font-size:13px;color:#60746a}.card{background:white;border:1px solid var(--line);border-radius:20px;padding:22px;margin-top:18px;box-shadow:0 5px 18px #175c3510}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}select,input{width:100%;padding:12px;border:1px solid #bad7c4;border-radius:11px;background:white;font-size:15px}button{background:var(--green);color:white;border:0;border-radius:12px;padding:13px 20px;font-weight:700;cursor:pointer}button:disabled{opacity:.5}button.secondary{background:#e6f3eb;color:var(--green)}.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}.pill{display:inline-block;padding:4px 9px;background:#e8f4ed;border-radius:99px;font-size:12px;color:var(--green)}.warning{background:#fff7e9;border:1px solid #ecd8b5;padding:12px;border-radius:12px;font-size:13px}.meal{border:1px solid var(--line);border-radius:15px;padding:14px;margin:12px 0}.meal h3{margin:0 0 7px;font-size:16px}.meal ul{margin:8px 0;padding-left:20px}.totals{font-weight:700;color:var(--green)}.small{font-size:12px}.hidden{display:none}a{color:var(--green);overflow-wrap:anywhere}.row{display:flex;justify-content:space-between;gap:12px;align-items:center}.empty{padding:20px;background:#f4f7f5;border-radius:12px}.stat{padding:13px;background:var(--light);border-radius:12px}footer{font-size:12px;color:#66786e;margin-top:22px}@media(max-width:560px){.grid{grid-template-columns:1fr}.card{padding:16px}}
+</style></head><body><main>
+<header><div class="logo">🥗</div><div><h1>Conveni Fit <span class="pill">Ver.3</span></h1><div class="muted">コンビニ食事選びサポート｜グリーン×ホワイト</div></div></header>
+<section class="card"><h2>あなたに合った組み合わせを探す</h2><div class="grid">
+<div><label for="chain">コンビニ</label><select id="chain"><option value="seven">セブン‐イレブン</option><option value="family">ファミリーマート</option><option value="lawson">ローソン</option><option value="any">3社から選ぶ</option></select></div>
+<div><label for="goal">目標</label><select id="goal"><option value="balance">食生活を整える</option><option value="diet">体重管理</option><option value="muscle">筋トレ・たんぱく質重視</option></select></div>
+<div><label for="budget">1日予算（円）</label><input id="budget" type="number" min="300" max="10000" step="100" value="1800"></div>
+<div><label for="exclude">除外する食材</label><select id="exclude"><option value="">なし</option><option value="卵">卵</option><option value="鶏肉">鶏肉</option></select></div>
+</div><div class="actions"><button id="suggest">献立を提案する</button><button class="secondary" id="refresh">商品データを再読込</button></div><p class="muted" id="status" aria-live="polite">商品データを読み込んでいます…</p></section>
+<section class="card"><h2>今日の献立候補</h2><div id="result" class="empty">条件を選んで「献立を提案する」を押してね。</div></section>
+<section class="card"><div class="row"><h2>登録商品と更新状態</h2><span class="pill" id="count">0件</span></div><div id="catalog"></div></section>
+<section class="card"><h2>更新履歴</h2><div id="history" class="muted">履歴を読み込み中…</div><p class="muted">データの変更は自動反映できますが、公式ページの変更を自動的に「正しい栄養値」と認定することはしません。</p></section>
+<footer>本サービスは一般的な食事選びの参考情報です。医療・栄養指導の代替ではありません。栄養成分、価格、アレルゲン、在庫は店頭表示を優先してください。</footer>
+</main><script>
+let db={products:[]}, history=[];
+const $=id=>document.getElementById(id);
+const yen=n=>n==null?'未確認':Number(n).toLocaleString('ja-JP')+'円';
+const val=(n,unit)=>n==null?'未確認':n+unit;
+const escapeHtml=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const names={seven:'セブン',family:'ファミマ',lawson:'ローソン'};
+async function load(){
+ try{
+ const [a,b]=await Promise.all([fetch('data/products.json?ts='+Date.now(),{cache:'no-store'}),fetch('data/history.json?ts='+Date.now(),{cache:'no-store'})]);
+ if(!a.ok||!b.ok)throw Error('HTTPエラー');
+ db=await a.json();history=await b.json();renderCatalog();renderHistory();
+ const active=db.products.filter(x=>x.status==='verified').length;
+ $('status').textContent=`登録 ${db.products.length}件／献立利用可能 ${active}件。未確認の商品は自動提案に使用しません。`;
+ }catch(e){$('status').textContent='データの読み込みに失敗しました。ローカルファイルではなくWebサーバーで開いてください。';$('catalog').textContent='読み込みエラー';}
+}
+function renderCatalog(){
+ $('count').textContent=db.products.length+'件';
+ $('catalog').innerHTML=db.products.map(p=>`<div class="meal"><div class="row"><strong>${escapeHtml(p.name)}</strong><span class="pill">${p.status==='verified'?'確認済み':'要確認'}</span></div><p class="muted">${names[p.chain]}・${yen(p.price)}・${val(p.kcal,'kcal')}・P ${val(p.protein,'g')}・最終確認 ${p.verified_at||'未確認'}</p><a target="_blank" rel="noopener noreferrer" href="${escapeHtml(p.source_url)}">公式サイトで確認 ↗</a></div>`).join('');
+}
+function renderHistory(){
+ $('history').innerHTML=history.length?history.slice().reverse().slice(0,25).map(h=>`<p>・${escapeHtml(h.at)}：${escapeHtml(h.message)}</p>`).join(''):'まだ更新履歴はありません。';
+}
+function suggest(){
+ const chain=$('chain').value,goal=$('goal').value,budget=Number($('budget').value),ex=$('exclude').value;
+ if(!Number.isFinite(budget)||budget<300){$('result').textContent='予算を300円以上に設定してください。';return;}
+ const pool=db.products.filter(p=>p.status==='verified'&&p.price!=null&&p.kcal!=null&&p.protein!=null&&(chain==='any'||p.chain===chain)&&(!ex||!p.allergens.includes(ex)));
+ const cat=c=>pool.filter(p=>p.category===c).sort((a,b)=>goal==='muscle'?b.protein-a.protein:a.price-b.price);
+ const staple=cat('staple'),prot=cat('protein'),veg=cat('vegetable');
+ if(!staple.length||!prot.length||!veg.length){
+ $('result').innerHTML='<div class="warning"><strong>献立を確定できません。</strong><p>確認済みの主食・たんぱく質源・野菜が揃っていません。商品を推測して補完せず、データ追加を待ちます。下の登録商品で「要確認」の状況を確認してください。</p></div>';return;
+ }
+ const options=[];
+ for(const s of staple)for(const p of prot)for(const v of veg){const price=s.price+p.price+v.price; if(price<=budget/3)options.push({items:[s,p,v],price,kcal:s.kcal+p.kcal+v.kcal,protein:s.protein+p.protein+v.protein});}
+ options.sort((a,b)=>goal==='muscle'?b.protein-a.protein:goal==='diet'?a.price-b.price:Math.abs(a.price-budget/3)-Math.abs(b.price-budget/3));
+ if(!options.length){$('result').innerHTML='<div class="warning">現在の予算では、確認済み商品で主食＋たんぱく質源＋野菜を組み合わせられません。予算を上げるか、コンビニを「3社から選ぶ」にしてください。</div>';return;}
+ const meals=['朝食','昼食','夕食'].map((name,i)=>({name,...options[Math.min(i,options.length-1)]}));
+ const total=meals.reduce((a,m)=>a+m.price,0);
+ $('result').innerHTML=`<p class="warning">これは確認済み商品の組み合わせ候補です。個人の必要エネルギーを満たす献立とは限りません。同じ商品が繰り返される場合があります。</p>`+meals.map(m=>`<div class="meal"><h3>${m.name}</h3><ul>${m.items.map(p=>`<li>${escapeHtml(p.name)}（${names[p.chain]}）</li>`).join('')}</ul><div class="totals">${yen(m.price)} ／ ${m.kcal}kcal ／ たんぱく質 ${m.protein.toFixed(1)}g</div></div>`).join('')+`<p class="totals">1日合計 ${yen(total)} ／ 予算 ${yen(budget)}</p><button id="copy">買い物メモをコピー</button>`;
+ $('copy').onclick=()=>{const memo=meals.map(m=>m.name+': '+m.items.map(p=>p.name).join('、')).join('\n')+'\n合計 '+yen(total);navigator.clipboard?.writeText(memo).then(()=>alert('コピーしました')).catch(()=>alert(memo));};
+}
+$('suggest').addEventListener('click',suggest);$('refresh').addEventListener('click',load);load();
+</script></body></html>

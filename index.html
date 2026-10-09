@@ -5,7 +5,7 @@
 </style></head><body><main>
 <header><div class="logo">🥗</div><div><h1>Conveni Fit <span class="pill">β版</span></h1><div class="muted">コンビニ食事選びサポート｜グリーン×ホワイト</div></div></header>
 <section class="hero"><h2>コンビニでも、<br>自分らしい食事選びを。🌿</h2><p>ダイエットも筋トレも。公式情報を確認した商品から、目的に合う組み合わせを探そう。</p><div class="metrics"><div class="metric"><strong id="metricAll">—</strong><span>登録商品</span></div><div class="metric"><strong id="metricVerified">—</strong><span>確認済み</span></div><div class="metric"><strong>3社</strong><span>対象コンビニ</span></div></div></section><section class="card"><h2>あなたに合った組み合わせを探す</h2><div class="grid">
-<div><label for="chain">コンビニ</label><select id="chain"><option value="seven">セブン‐イレブン</option><option value="family">ファミリーマート</option><option value="lawson">ローソン</option><option value="any">3社から選ぶ</option></select></div>
+<div><label for="chain">コンビニ</label><select id="chain"><option value="seven">セブン‐イレブン</option><option value="family">ファミリーマート</option><option value="lawson" selected>ローソン</option><option value="any">3社から選ぶ</option></select></div>
 <div><label for="goal">目標</label><select id="goal"><option value="balance">食生活を整える</option><option value="diet">体重管理</option><option value="muscle">筋トレ・たんぱく質重視</option></select></div>
 <div><label for="budget">1日予算（円）</label><input id="budget" type="number" min="300" max="10000" step="100" value="1800"></div>
 <div><label for="exclude">除外する食材</label><select id="exclude"><option value="">なし</option><option value="卵">卵</option><option value="鶏肉">鶏肉</option></select></div>
@@ -30,6 +30,7 @@ async function load(){
  $('metricAll').textContent=db.products.length;
  $('metricVerified').textContent=active;
  $('status').textContent=`登録 ${db.products.length}件／献立利用可能 ${active}件。未確認の商品は自動提案に使用しません。`;
+ suggest();
  }catch(e){$('status').textContent='データの読み込みに失敗しました。ローカルファイルではなくWebサーバーで開いてください。';$('catalog').textContent='読み込みエラー';}
 }
 function renderCatalog(){
@@ -48,7 +49,9 @@ function suggest(){
  const cat=c=>pool.filter(p=>p.category===c).sort((a,b)=>goal==='muscle'?b.protein-a.protein:a.price-b.price);
  const staple=cat('staple'),prot=cat('protein'),veg=cat('vegetable');
  if(!staple.length||!prot.length||!veg.length){
- $('result').innerHTML='<div class="warning"><strong>献立を確定できません。</strong><p>確認済みの主食・たんぱく質源・野菜がまだ揃っていません。選択したコンビニでは、必要なカテゴリの商品が不足しています。正確な商品情報が揃うまで、献立を無理に作成しません。下の商品一覧から確認済み商品を探せます。</p></div>';return;
+ const missing=[!staple.length?'主食':null,!prot.length?'たんぱく質源':null,!veg.length?'野菜':null].filter(Boolean).join('・');
+ $('result').innerHTML=`<div class="warning"><strong>このコンビニでは献立を確定できません。</strong><p>確認済みの「${missing}」が不足しています。ローソンを選ぶと現在の登録データで献立候補を表示できます。</p><button id="tryLawson" type="button">ローソンで献立を試す</button></div>`;
+ $('tryLawson').onclick=()=>{$('chain').value='lawson';suggest();};return;
  }
  const options=[];
  for(const s of staple)for(const p of prot)for(const v of veg){const price=s.price+p.price+v.price; if(price<=budget/3)options.push({items:[s,p,v],price,kcal:s.kcal+p.kcal+v.kcal,protein:s.protein+p.protein+v.protein});}

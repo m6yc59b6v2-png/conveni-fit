@@ -21,7 +21,9 @@ for x in data['products']:
     if x['status']=='verified':
         assert x['verified_at'] and re.fullmatch(r'\d{4}-\d{2}-\d{2}',x['verified_at'])
         date=datetime.date.fromisoformat(x['verified_at'])
-        assert date<=datetime.date.today()
+        assert date <= datetime.datetime.now(
+    datetime.timezone(datetime.timedelta(hours=9))
+).date(), "確認日が日本時間の今日より未来です"
         assert all(x[k] is not None for k in ('price','kcal','protein')), x['id']
         assert x.get('source_evidence'), f"{x['id']}: source_evidence required"
         assert x.get('reviewed_by'), f"{x['id']}: reviewed_by required"

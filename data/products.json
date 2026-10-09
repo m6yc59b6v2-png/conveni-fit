@@ -104,21 +104,24 @@
         "卵"
       ]
     },
-    {
+  {
   "id": "lawson-rice",
   "chain": "lawson",
   "name": "塩にぎり",
   "category": "staple",
-  "price": 150,
-  "kcal": 184,
-  "protein": 3.1,
-  "fat": 0.4,
-  "carbs": 42.4,
-  "source_url": "https://www.lawson.co.jp/recommend/original/",
+  "price": 149,
+  "kcal": 173,
+  "protein": 2.9,
+  "fat": 0.9,
+  "carbs": 38.7,
+  "source_url": "https://www.lawson.co.jp/recommend/original/detail/1527622_1996.html",
   "verified_at": "2026-10-10",
   "status": "verified",
-  "allergens": []
+      "allergens": []
+  }
+  ]
 }
+
     },
     {
       "id": "lawson-bread",

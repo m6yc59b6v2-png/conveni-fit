@@ -14,10 +14,12 @@
       "carbs": null,
       "source_url": "https://www.sej.co.jp/products/a/item/250701/",
       "verified_at": "2026-10-10",
-      "status": "verified",
-      "allergens":，"source_evidence": "ローソン公式商品ページで価格・栄養成分を確認",
-"reviewed_by": "yura" [
-        "鶏肉"
+      "verified_at": "2026-10-10",
+"status": "verified",
+"allergens": ["鶏肉"],
+"source_evidence": "セブンイレブン公式商品ページで価格・栄養成分を確認",
+"reviewed_by": "yura"
+},
       ]
     },
     {

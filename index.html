@@ -11,11 +11,11 @@
 <div><label for="exclude">除外する食材</label><select id="exclude"><option value="">なし</option><option value="卵">卵</option><option value="鶏肉">鶏肉</option></select></div>
 </div><div class="actions"><button id="suggest">献立を提案する</button><button class="secondary" id="refresh">商品データを再読込</button></div><p class="muted" id="status" aria-live="polite">商品データを読み込んでいます…</p></section>
 <section class="card"><h2>今日の献立候補</h2><div id="result" class="empty">条件を選んで「献立を提案する」を押してね。</div></section>
-<section class="card"><div class="row"><h2>登録商品と更新状態</h2><span class="pill" id="count">0件</span></div><p class="muted">「確認済み」の商品だけが献立提案の候補になります。</p><div class="filters" id="catalogFilters"><button class="filter active" data-chain="all">すべて</button><button class="filter" data-chain="seven">セブン</button><button class="filter" data-chain="family">ファミマ</button><button class="filter" data-chain="lawson">ローソン</button></div><div id="catalog" class="catalog-grid"></div></section>
+<section class="card"><div class="row"><h2>登録商品と更新状態</h2><span class="pill" id="count">0件</span></div><p class="muted">「確認済み」の商品だけが献立提案の候補になります。</p><div class="filters" id="catalogFilters"><button class="filter active" data-chain="all">すべて</button><button class="filter" data-chain="seven">セブン</button><button class="filter" data-chain="family">ファミマ</button><button class="filter" data-chain="lawson">ローソン</button></div><div class="grid" style="margin:10px 0 16px"><div><label for="productSearch">商品名で検索</label><input id="productSearch" type="search" placeholder="例：サラダチキン、たまご"></div><div><label for="catalogStatus">表示する商品</label><select id="catalogStatus"><option value="all">すべての商品</option><option value="verified">確認済みのみ</option></select></div></div><p class="muted" id="catalogShowing" aria-live="polite"></p><div id="catalog" class="catalog-grid"></div></section>
 <section class="card"><h2>更新履歴</h2><div id="history" class="muted">履歴を読み込み中…</div><p class="muted">データの変更は自動反映できますが、公式ページの変更を自動的に「正しい栄養値」と認定することはしません。</p></section>
 <footer>本サービスは一般的な食事選びの参考情報です。医療・栄養指導の代替ではありません。栄養成分、価格、アレルゲン、在庫は店頭表示を優先してください。</footer>
 </main><script>
-let db={products:[]}, history=[], catalogChain="all";
+let db={products:[]}, history=[], catalogChain="all", catalogQuery="", catalogOnlyVerified=false, suggestionVariant=0;
 const $=id=>document.getElementById(id);
 const yen=n=>n==null?'未確認':Number(n).toLocaleString('ja-JP')+'円';
 const val=(n,unit)=>n==null?'未確認':n+unit;
@@ -35,10 +35,13 @@ async function load(){
 }
 function renderCatalog(){
  $('count').textContent=db.products.length+'件';
- const shown=db.products.filter(p=>catalogChain==='all'||p.chain===catalogChain);
+ const shown=db.products.filter(p=>(catalogChain==='all'||p.chain===catalogChain)&&(!catalogOnlyVerified||p.status==='verified')&&p.name.toLocaleLowerCase('ja').includes(catalogQuery.toLocaleLowerCase('ja')));
+ $('catalogShowing').textContent=`表示中 ${shown.length}件 ／ 登録 ${db.products.length}件`;
  $('catalog').innerHTML=shown.length?shown.map(p=>`<article class="meal"><div class="row"><span class="tag">${names[p.chain]}</span><span class="tag ${p.status==='verified'?'':'review'}">${p.status==='verified'?'✓ 確認済み':'要確認'}</span></div><h3 style="margin-top:12px">${escapeHtml(p.name)}</h3><strong style="font-size:21px;color:var(--green)">${yen(p.price)}</strong><div class="macro"><span>🔥 ${val(p.kcal,'kcal')}</span><span>💪 P ${val(p.protein,'g')}</span><span>脂質 ${val(p.fat,'g')}</span><span>炭水化物 ${val(p.carbs,'g')}</span></div><p class="muted">最終確認：${p.verified_at||'未確認'}</p>${p.serving_note?`<p class="muted">${escapeHtml(p.serving_note)}</p>`:''}${p.region_note?`<p class="muted">📍 ${escapeHtml(p.region_note)}</p>`:''}<a target="_blank" rel="noopener noreferrer" href="${escapeHtml(p.source_url)}">公式の商品情報を見る ↗</a></article>`).join(''):'<p class="empty">このコンビニの商品はまだ登録されていません。</p>';
 }
 $('catalogFilters').addEventListener('click',e=>{const b=e.target.closest('button[data-chain]');if(!b)return;catalogChain=b.dataset.chain;document.querySelectorAll('#catalogFilters button').forEach(x=>x.classList.toggle('active',x===b));renderCatalog();});
+$('productSearch').addEventListener('input',e=>{catalogQuery=e.target.value.trim();renderCatalog();});
+$('catalogStatus').addEventListener('change',e=>{catalogOnlyVerified=e.target.value==='verified';renderCatalog();});
 function renderHistory(){
  $('history').innerHTML=history.length?history.slice().reverse().slice(0,25).map(h=>`<p>・${escapeHtml(h.at)}：${escapeHtml(h.message)}</p>`).join(''):'まだ更新履歴はありません。';
 }
@@ -76,7 +79,8 @@ function suggest(){
    if(!possible.length)break;
    const ranked=possible.slice().sort((a,b)=>{
      const penalty=m=>m.items.reduce((sum,p)=>sum+(used.get(p.id)||0)*180,0);
-     return score(a)+penalty(a)-(score(b)+penalty(b));
+     const rotate=m=>m.items.reduce((sum,p)=>sum+p.id.split('').reduce((n,c)=>n+c.charCodeAt(0),0),0)%13;
+     return score(a)+penalty(a)+((rotate(a)+suggestionVariant)%13)*12-(score(b)+penalty(b)+((rotate(b)+suggestionVariant)%13)*12);
    });
    const pick=ranked[0];
    meals.push({name:['朝食','昼食','夕食'][i],...pick});
@@ -91,7 +95,7 @@ function suggest(){
  meals.map(m=>`<div class="meal"><h3>${m.name}</h3><ul>${m.items.map(p=>`<li>${escapeHtml(p.name)}（${names[p.chain]}）</li>`).join('')}</ul><div class="totals">${yen(m.price)} ／ ${macro(m)}</div></div>`).join('')+
  `<div class="stat"><strong>1日合計 ${yen(total)} ／ ${Math.round(kcalTotal)}kcal ／ P ${proteinTotal.toFixed(1)}g</strong><p class="small">予算残り ${yen(budget-total)}。1日分の必要栄養量を満たすことを意味しません。</p></div><div class="actions"><button id="copy">買い物メモをコピー</button><button class="secondary" id="another">もう一度提案</button></div>`;
  $('copy').onclick=()=>{const memo=meals.map(m=>m.name+': '+m.items.map(p=>p.name).join('、')).join('\\n')+'\\n合計 '+yen(total);if(navigator.clipboard?.writeText){navigator.clipboard.writeText(memo).then(()=>alert('コピーしました')).catch(()=>prompt('こちらをコピーしてください',memo));}else prompt('こちらをコピーしてください',memo);};
- $('another').onclick=()=>{const current=$('goal').value;$('goal').value=current==='balance'?'diet':current==='diet'?'muscle':'balance';suggest();};
+ $('another').onclick=()=>{suggestionVariant++;suggest();};
 }
-$('suggest').addEventListener('click',suggest);$('refresh').addEventListener('click',load);load();
+$('suggest').addEventListener('click',()=>{suggestionVariant=0;suggest();});$('refresh').addEventListener('click',load);load();
 </script></body></html>

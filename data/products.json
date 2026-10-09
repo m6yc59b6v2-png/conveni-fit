@@ -24,19 +24,21 @@
     {
       "id": "seven-egg",
       "chain": "seven",
-      "name": "味付き半熟ゆでたまご 1個入",
+      "name": "７プレミアム味付き半熟ゆでたまご１個入",
       "category": "protein",
       "price": 106,
       "kcal": 65,
       "protein": 5.8,
-      "fat": null,
-      "carbs": null,
-      "source_url": "https://www.sej.co.jp/products/",
-      "verified_at": null,
-      "status": "review",
+      "fat": 4.3,
+      "carbs": 0.7,
+      "source_url": "https://www.sej.co.jp/products/a/item/102041/",
+      "verified_at": "2026-10-10",
+      "status": "verified",
       "allergens": [
         "卵"
-      ]
+      ],
+      "source_evidence": "https://www.sej.co.jp/products/a/item/102041/",
+      "reviewed_by": "ChatGPT (official product page review)"
     },
     {
       "id": "family-chicken",
@@ -48,7 +50,7 @@
       "protein": 20.8,
       "fat": null,
       "carbs": null,
-      "source_url": "https://www.family.co.jp/goods.html",
+      "source_url": "https://www.family.co.jp/goods/sidedishes/2234755.html",
       "verified_at": null,
       "status": "review",
       "allergens": [
@@ -75,19 +77,21 @@
     {
       "id": "lawson-chicken",
       "chain": "lawson",
-      "name": "サラダチキン プレーン 110g",
+      "name": "たんぱく質30.3g サラダチキン プレーン",
       "category": "protein",
       "price": 279,
       "kcal": 141,
       "protein": 30.3,
-      "fat": null,
-      "carbs": null,
-      "source_url": "https://www.lawson.co.jp/recommend/original/",
-      "verified_at": null,
-      "status": "review",
+      "fat": 2.1,
+      "carbs": 0.2,
+      "source_url": "https://www.lawson.co.jp/recommend/original/detail/1507463_1996.html",
+      "verified_at": "2026-10-10",
+      "status": "verified",
       "allergens": [
         "鶏肉"
-      ]
+      ],
+      "source_evidence": "https://www.lawson.co.jp/recommend/original/detail/1507463_1996.html",
+      "reviewed_by": "ChatGPT (official product page review)"
     },
     {
       "id": "lawson-egg",
@@ -97,14 +101,16 @@
       "price": 157,
       "kcal": 81,
       "protein": 7.3,
-      "fat": null,
-      "carbs": null,
-      "source_url": "https://www.lawson.co.jp/recommend/original/",
-      "verified_at": null,
-      "status": "review",
+      "fat": 5.5,
+      "carbs": 0.6,
+      "source_url": "https://mldata.lawson.co.jp/recommend/original/detail/1485814_1996.html",
+      "verified_at": "2026-10-10",
+      "status": "verified",
       "allergens": [
         "卵"
-      ]
+      ],
+      "source_evidence": "https://mldata.lawson.co.jp/recommend/original/detail/1485814_1996.html",
+      "reviewed_by": "ChatGPT (official product page review)"
     },
     {
       "id": "lawson-rice",
@@ -126,17 +132,19 @@
     {
       "id": "lawson-bread",
       "chain": "lawson",
-      "name": "ブランパン 2個入",
+      "name": "NL たんぱく質が摂れるブランパン 2個入",
       "category": "staple",
       "price": 149,
-      "kcal": null,
-      "protein": null,
-      "fat": null,
-      "carbs": null,
-      "source_url": "https://www.lawson.co.jp/recommend/original/",
-      "verified_at": null,
-      "status": "review",
-      "allergens": []
+      "kcal": 132,
+      "protein": 12.2,
+      "fat": 5.6,
+      "carbs": 12.2,
+      "source_url": "https://www.lawson.co.jp/recommend/original/detail/1520672_1996.html",
+      "verified_at": "2026-10-10",
+      "status": "verified",
+      "allergens": [],
+      "source_evidence": "https://www.lawson.co.jp/recommend/original/detail/1520672_1996.html",
+      "reviewed_by": "ChatGPT (official product page review)"
     }
   ]
 }

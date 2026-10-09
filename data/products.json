@@ -15,7 +15,8 @@
       "source_url": "https://www.sej.co.jp/products/a/item/250701/",
       "verified_at": "2026-10-10",
       "status": "verified",
-      "allergens": [
+      "allergens":，"source_evidence": "ローソン公式商品ページで価格・栄養成分を確認",
+"reviewed_by": "yura" [
         "鶏肉"
       ]
     },
@@ -32,7 +33,8 @@
       "source_url": "https://www.sej.co.jp/products/",
       "verified_at": null,
       "status": "review",
-      "allergens": [
+      "allergens":，"source_evidence": "ローソン公式商品ページで価格・栄養成分を確認",
+"reviewed_by": "yura" [
         "卵"
       ]
     },
@@ -49,7 +51,8 @@
       "source_url": "https://www.family.co.jp/goods.html",
       "verified_at": null,
       "status": "review",
-      "allergens": [
+      "allergens":，"source_evidence": "ローソン公式商品ページで価格・栄養成分を確認",
+"reviewed_by": "yura" [
         "鶏肉"
       ]
     },
@@ -66,7 +69,8 @@
       "source_url": "https://www.family.co.jp/goods.html",
       "verified_at": null,
       "status": "review",
-      "allergens": [
+      "allergens":，"source_evidence": "ローソン公式商品ページで価格・栄養成分を確認",
+"reviewed_by": "yura" [
         "鶏肉"
       ]
     },
@@ -83,7 +87,8 @@
       "source_url": "https://www.lawson.co.jp/recommend/original/",
       "verified_at": null,
       "status": "review",
-      "allergens": [
+      "allergens":，"source_evidence": "ローソン公式商品ページで価格・栄養成分を確認",
+"reviewed_by": "yura" [
         "鶏肉"
       ]
     },
@@ -100,7 +105,8 @@
       "source_url": "https://www.lawson.co.jp/recommend/original/",
       "verified_at": null,
       "status": "review",
-      "allergens": [
+      "allergens":，"source_evidence": "ローソン公式商品ページで価格・栄養成分を確認",
+"reviewed_by": "yura" [
         "卵"
       ]
     },
@@ -134,7 +140,8 @@
       "source_url": "https://www.lawson.co.jp/recommend/original/",
       "verified_at": null,
       "status": "review",
-      "allergens": []
+      "allergens":，"source_evidence": "ローソン公式商品ページで価格・栄養成分を確認",
+"reviewed_by": "yura" []
     }
   ]
 }

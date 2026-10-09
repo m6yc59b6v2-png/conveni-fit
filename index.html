@@ -2,7 +2,7 @@
 :root{--green:#176d4b;--light:#eaf6ef;--line:#d9e9df;--ink:#1d3329}*{box-sizing:border-box}body{margin:0;background:#f5faf7;color:var(--ink);font-family:system-ui,"Noto Sans JP",sans-serif}main{max-width:960px;margin:auto;padding:25px 16px 65px}header{display:flex;gap:13px;align-items:center}.logo{background:#d6f0df;padding:14px;border-radius:17px;font-size:29px}h1{margin:0;color:var(--green);font-size:27px}h2{font-size:20px;margin:0 0 14px}p{line-height:1.7}.muted{font-size:13px;color:#60746a}.card{background:white;border:1px solid var(--line);border-radius:20px;padding:22px;margin-top:18px;box-shadow:0 5px 18px #175c3510}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}select,input{width:100%;padding:12px;border:1px solid #bad7c4;border-radius:11px;background:white;font-size:15px}button{background:var(--green);color:white;border:0;border-radius:12px;padding:13px 20px;font-weight:700;cursor:pointer}button:disabled{opacity:.5}button.secondary{background:#e6f3eb;color:var(--green)}.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}.pill{display:inline-block;padding:4px 9px;background:#e8f4ed;border-radius:99px;font-size:12px;color:var(--green)}.warning{background:#fff7e9;border:1px solid #ecd8b5;padding:12px;border-radius:12px;font-size:13px}.meal{border:1px solid var(--line);border-radius:15px;padding:14px;margin:12px 0}.meal h3{margin:0 0 7px;font-size:16px}.meal ul{margin:8px 0;padding-left:20px}.totals{font-weight:700;color:var(--green)}.small{font-size:12px}.hidden{display:none}a{color:var(--green);overflow-wrap:anywhere}.row{display:flex;justify-content:space-between;gap:12px;align-items:center}.empty{padding:20px;background:#f4f7f5;border-radius:12px}.stat{padding:13px;background:var(--light);border-radius:12px}footer{font-size:12px;color:#66786e;margin-top:22px}@media(max-width:560px){.grid{grid-template-columns:1fr}.card{padding:16px}}
 
 :root{--green:#126849;--light:#e9f7ef;--line:#dcebe1;--ink:#19392b}body{background:linear-gradient(180deg,#e7f5eb 0,#f7fbf8 270px);letter-spacing:.01em}main{max-width:980px}header{padding:14px 0 8px}.logo{background:#fff;box-shadow:0 6px 22px #12684918;font-size:33px}.card{box-shadow:0 12px 34px #164a2910;border-radius:24px}h1{letter-spacing:-.04em;font-size:30px}button{transition:transform .15s,filter .15s}button:hover{filter:brightness(1.06);transform:translateY(-1px)}button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #83caa3;outline-offset:2px}.hero{padding:24px 2px 6px}.hero h2{font-size:clamp(23px,5vw,34px);line-height:1.4;margin:0}.hero p{color:#567365;margin:9px 0 0}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}.metric{background:white;border:1px solid var(--line);border-radius:17px;padding:15px}.metric strong{display:block;color:var(--green);font-size:25px}.metric span{font-size:12px;color:#60746a}.filters{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 14px}.filter{background:#eff6f1;color:#246344;padding:9px 13px}.filter.active{background:var(--green);color:white}.catalog-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.catalog-grid .meal{margin:0;background:#fff}.tag{display:inline-block;font-size:11px;font-weight:700;padding:4px 9px;border-radius:20px;background:#edf7f0;color:#126849}.tag.review{background:#fff5e6;color:#926223}.macro{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.macro span{font-size:12px;background:#f5f9f6;border-radius:8px;padding:6px 9px}.result-note{font-size:13px;color:#587164}@media(max-width:560px){.catalog-grid{grid-template-columns:1fr}.metrics{gap:6px}.metric{padding:11px}.metric strong{font-size:21px}h1{font-size:25px}.hero{padding-top:12px}}
-</style></head><body><main>
+.diary-entry{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}.diary-entry:last-child{border-bottom:0}.diary-entry strong{display:block}.diary-entry .muted{margin:3px 0}.diary-entry button{padding:8px 12px}.diary-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}.diary-summary .metric{padding:12px}.diary-summary strong{font-size:20px}.diary-group{margin-top:17px}.diary-group h3{font-size:16px;margin:0 0 6px}@media(max-width:560px){.diary-summary{gap:5px}.diary-summary .metric{padding:9px}.diary-summary strong{font-size:17px}}</style></head><body><main>
 <header><div class="logo">🥗</div><div><h1>Conveni Fit <span class="pill">β版</span></h1><div class="muted">コンビニ食事選びサポート｜グリーン×ホワイト</div></div></header>
 <section class="hero"><h2>コンビニでも、<br>自分らしい食事選びを。🌿</h2><p>ダイエットも筋トレも。公式情報を確認した商品から、目的に合う組み合わせを探そう。</p><div class="metrics"><div class="metric"><strong id="metricAll">—</strong><span>登録商品</span></div><div class="metric"><strong id="metricVerified">—</strong><span>確認済み</span></div><div class="metric"><strong>3社</strong><span>対象コンビニ</span></div></div></section><section class="card"><h2>あなたに合った組み合わせを探す</h2><div class="grid">
 <div><label for="chain">コンビニ</label><select id="chain"><option value="seven">セブン‐イレブン</option><option value="family">ファミリーマート</option><option value="lawson" selected>ローソン</option><option value="any">3社から選ぶ</option></select></div>
@@ -11,6 +11,7 @@
 <div><label for="exclude">除外する食材</label><select id="exclude"><option value="">なし</option><option value="卵">卵</option><option value="鶏肉">鶏肉</option></select></div>
 </div><div class="actions"><button id="suggest">献立を提案する</button><button class="secondary" id="refresh">商品データを再読込</button></div><p class="muted" id="status" aria-live="polite">商品データを読み込んでいます…</p></section>
 <section class="card"><h2>今日の献立候補</h2><div id="result" class="empty">条件を選んで「献立を提案する」を押してね。</div></section>
+<section class="card" id="diary"><div class="row"><h2>📔 食事記録ダイアリー</h2><span class="pill">端末内に保存</span></div><p class="muted">食べたものを朝・昼・夜・間食に分けて記録。登録済み商品は栄養成分を自動入力できます。</p><div class="grid"><div><label for="diaryDate">記録する日</label><input id="diaryDate" type="date"></div><div><label for="diaryMeal">食事の時間</label><select id="diaryMeal"><option value="朝食">朝食</option><option value="昼食">昼食</option><option value="夕食">夕食</option><option value="間食">間食</option></select></div></div><div style="margin-top:12px"><label for="diaryProduct">商品から選ぶ（または手入力）</label><select id="diaryProduct"><option value="">手入力する</option></select></div><div class="grid" style="margin-top:12px"><div><label for="diaryName">食べたもの</label><input id="diaryName" maxlength="120" placeholder="例：おにぎり、手作りのお弁当"></div><div><label for="diaryKcal">カロリー（kcal・任意）</label><input id="diaryKcal" type="number" min="0" max="10000" step="0.1" placeholder="不明なら空欄"></div><div><label for="diaryProtein">たんぱく質（g・任意）</label><input id="diaryProtein" type="number" min="0" max="1000" step="0.1" placeholder="不明なら空欄"></div><div><label for="diaryNote">ひとことメモ（任意）</label><input id="diaryNote" maxlength="160" placeholder="例：おいしかった！"></div></div><div class="actions"><button id="diaryAdd" type="button">＋ 食事を記録</button><button id="diaryExport" class="secondary" type="button">記録をCSV保存</button></div><p class="muted" id="diaryMessage" aria-live="polite"></p><div class="diary-summary"><div class="metric"><strong id="diaryCount">0</strong><span>記録件数</span></div><div class="metric"><strong id="diaryTotalKcal">—</strong><span>合計kcal（入力分）</span></div><div class="metric"><strong id="diaryTotalProtein">—</strong><span>合計P（入力分）</span></div></div><div id="diaryEntries" class="empty">まだ記録がありません。</div><p class="muted">※記録はこのブラウザに保存され、別のスマホ・PCとは同期しません。ブラウザのデータを削除すると消える場合があります。数値が未入力の食品は合計に含まれません。CSV保存でバックアップできます。</p></section>
 <section class="card"><div class="row"><h2>登録商品と更新状態</h2><span class="pill" id="count">0件</span></div><p class="muted">「確認済み」の商品だけが献立提案の候補になります。</p><div class="filters" id="catalogFilters"><button class="filter active" data-chain="all">すべて</button><button class="filter" data-chain="seven">セブン</button><button class="filter" data-chain="family">ファミマ</button><button class="filter" data-chain="lawson">ローソン</button></div><div class="grid" style="margin:10px 0 16px"><div><label for="productSearch">商品名で検索</label><input id="productSearch" type="search" placeholder="例：サラダチキン、たまご"></div><div><label for="catalogStatus">表示する商品</label><select id="catalogStatus"><option value="all">すべての商品</option><option value="verified">確認済みのみ</option></select></div></div><p class="muted" id="catalogShowing" aria-live="polite"></p><div id="catalog" class="catalog-grid"></div></section>
 <section class="card"><h2>更新履歴</h2><div id="history" class="muted">履歴を読み込み中…</div><p class="muted">データの変更は自動反映できますが、公式ページの変更を自動的に「正しい栄養値」と認定することはしません。</p></section>
 <footer>本サービスは一般的な食事選びの参考情報です。医療・栄養指導の代替ではありません。栄養成分、価格、アレルゲン、在庫は店頭表示を優先してください。</footer>
@@ -25,7 +26,7 @@ async function load(){
  try{
  const [a,b]=await Promise.all([fetch('data/products.json?ts='+Date.now(),{cache:'no-store'}),fetch('data/history.json?ts='+Date.now(),{cache:'no-store'})]);
  if(!a.ok||!b.ok)throw Error('HTTPエラー');
- db=await a.json();history=await b.json();renderCatalog();renderHistory();
+ db=await a.json();history=await b.json();renderCatalog();renderHistory();populateDiaryProducts();
  const active=db.products.filter(x=>x.status==='verified').length;
  $('metricAll').textContent=db.products.length;
  $('metricVerified').textContent=active;
@@ -97,5 +98,66 @@ function suggest(){
  $('copy').onclick=()=>{const memo=meals.map(m=>m.name+': '+m.items.map(p=>p.name).join('、')).join('\\n')+'\\n合計 '+yen(total);if(navigator.clipboard?.writeText){navigator.clipboard.writeText(memo).then(()=>alert('コピーしました')).catch(()=>prompt('こちらをコピーしてください',memo));}else prompt('こちらをコピーしてください',memo);};
  $('another').onclick=()=>{suggestionVariant++;suggest();};
 }
+
+const DIARY_KEY='conveni-fit-diary-v1';
+let diaryRecords=[];
+try{const saved=JSON.parse(localStorage.getItem(DIARY_KEY)||'[]');if(Array.isArray(saved))diaryRecords=saved.filter(x=>x&&typeof x==='object');}catch(e){$('diaryMessage').textContent='保存済みの記録を読み込めませんでした。';}
+function localDate(){const d=new Date(),offset=d.getTimezoneOffset();return new Date(d.getTime()-offset*60000).toISOString().slice(0,10);}
+$('diaryDate').value=localDate();
+function populateDiaryProducts(){
+ const select=$('diaryProduct');const old=select.value;
+ select.innerHTML='<option value="">手入力する</option>'+db.products.filter(p=>p.status==='verified').map(p=>'<option value="'+escapeHtml(p.id)+'">'+escapeHtml(names[p.chain]+'｜'+p.name)+'</option>').join('');
+ if([...select.options].some(x=>x.value===old))select.value=old;
+}
+$('diaryProduct').addEventListener('change',()=>{
+ const p=db.products.find(x=>x.id===$('diaryProduct').value);if(!p)return;
+ $('diaryName').value=p.name;$('diaryKcal').value=p.kcal??'';$('diaryProtein').value=p.protein??'';
+});
+function saveDiary(){
+ try{localStorage.setItem(DIARY_KEY,JSON.stringify(diaryRecords));return true;}
+ catch(e){$('diaryMessage').textContent='保存できませんでした。ブラウザの空き容量や設定を確認してください。';return false;}
+}
+function renderDiary(){
+ const date=$('diaryDate').value,entries=diaryRecords.filter(x=>x.date===date);
+ $('diaryCount').textContent=entries.length;
+ const kcal=entries.filter(x=>x.kcal!=null).reduce((sum,x)=>sum+x.kcal,0),protein=entries.filter(x=>x.protein!=null).reduce((sum,x)=>sum+x.protein,0);
+ $('diaryTotalKcal').textContent=entries.some(x=>x.kcal!=null)?Math.round(kcal):'—';
+ $('diaryTotalProtein').textContent=entries.some(x=>x.protein!=null)?protein.toFixed(1)+'g':'—';
+ const groups=['朝食','昼食','夕食','間食'];
+ $('diaryEntries').innerHTML=entries.length?groups.map(meal=>{
+  const items=entries.filter(x=>x.meal===meal);if(!items.length)return '';
+  return '<div class="diary-group"><h3>'+meal+'</h3>'+items.map(x=>'<div class="diary-entry"><div><strong>'+escapeHtml(x.name)+'</strong><p class="muted">'+(x.kcal==null?'kcal未入力':x.kcal+'kcal')+' ／ P '+(x.protein==null?'未入力':x.protein+'g')+(x.note?' ／ '+escapeHtml(x.note):'')+'</p></div><button class="secondary" type="button" data-delete="'+escapeHtml(x.id)+'" aria-label="'+escapeHtml(x.name)+'を削除">削除</button></div>').join('')+'</div>';
+ }).join(''):'<p>この日の記録はまだありません。上のフォームから追加してね。</p>';
+}
+$('diaryDate').addEventListener('change',renderDiary);
+$('diaryAdd').addEventListener('click',()=>{
+ const date=$('diaryDate').value,meal=$('diaryMeal').value,name=$('diaryName').value.trim();
+ if(!date||!name){$('diaryMessage').textContent='日付と食べたものを入力してください。';return;}
+ const parse=id=>{const raw=$(id).value.trim();if(raw==='')return null;const n=Number(raw);return Number.isFinite(n)&&n>=0?n:NaN;};
+ const kcal=parse('diaryKcal'),protein=parse('diaryProtein');
+ if(Number.isNaN(kcal)||Number.isNaN(protein)){$('diaryMessage').textContent='カロリーとたんぱく質には0以上の数字を入力してください。';return;}
+ const id=Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);
+ diaryRecords.push({id,date,meal,name,kcal,protein,note:$('diaryNote').value.trim()});
+ if(!saveDiary()){diaryRecords.pop();return;}
+ $('diaryMessage').textContent='記録を保存しました！';
+ ['diaryName','diaryKcal','diaryProtein','diaryNote'].forEach(id=>$(id).value='');
+ $('diaryProduct').value='';renderDiary();
+});
+$('diaryEntries').addEventListener('click',e=>{
+ const btn=e.target.closest('button[data-delete]');if(!btn)return;
+ if(!confirm('この記録を削除しますか？'))return;
+ const previous=diaryRecords;diaryRecords=diaryRecords.filter(x=>x.id!==btn.dataset.delete);
+ if(!saveDiary())diaryRecords=previous;renderDiary();
+});
+$('diaryExport').addEventListener('click',()=>{
+ if(!diaryRecords.length){$('diaryMessage').textContent='保存する記録がまだありません。';return;}
+ const quote=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+ const rows=[['日付','食事','食べたもの','kcal','たんぱく質g','メモ'],...diaryRecords.map(x=>[x.date,x.meal,x.name,x.kcal,x.protein,x.note])];
+ const csv='\uFEFF'+rows.map(row=>row.map(quote).join(',')).join('\r\n');
+ const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
+ const a=document.createElement('a');a.href=url;a.download='conveni-fit-diary.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
+renderDiary();
+
 $('suggest').addEventListener('click',()=>{suggestionVariant=0;suggest();});$('refresh').addEventListener('click',load);load();
 </script></body></html>

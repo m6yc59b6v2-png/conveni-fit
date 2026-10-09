@@ -504,6 +504,42 @@
       "source_evidence": "https://www.lawson.co.jp/recommend/original/detail/1473229_1996.html",
       "reviewed_by": "ChatGPT (Lawson official product page)",
       "region_note": "店舗・地域によって取扱い・栄養成分が異なる場合があります。アレルゲンは店頭ラベルで必ず確認してください。"
+    },
+    {
+      "id": "lawson-maitake-rice",
+      "chain": "lawson",
+      "name": "舞茸ごはんおにぎり（国産もち麦入り）",
+      "category": "staple",
+      "price": 149,
+      "kcal": 173,
+      "protein": 3.6,
+      "fat": 1.4,
+      "carbs": 37.8,
+      "source_url": "https://www.lawson.co.jp/sp/recommend/original/detail/1532023_2168.html",
+      "verified_at": "2026-10-10",
+      "status": "verified",
+      "allergens": [],
+      "source_evidence": "https://www.lawson.co.jp/sp/recommend/original/detail/1532023_2168.html",
+      "reviewed_by": "ChatGPT (Lawson official product page)",
+      "region_note": "関東地域の栄養成分を参照。アレルゲンは未確認のため、必ず店頭ラベルで確認してください。"
+    },
+    {
+      "id": "lawson-kombu-takuan-rice",
+      "chain": "lawson",
+      "name": "塩昆布と沢庵おにぎり（国産もち麦入り）",
+      "category": "staple",
+      "price": 149,
+      "kcal": 162,
+      "protein": 3.9,
+      "fat": 1.3,
+      "carbs": 34.8,
+      "source_url": "https://www.lawson.co.jp/sp/recommend/original/detail/1532845_2168.html",
+      "verified_at": "2026-10-10",
+      "status": "verified",
+      "allergens": [],
+      "source_evidence": "https://www.lawson.co.jp/sp/recommend/original/detail/1532845_2168.html",
+      "reviewed_by": "ChatGPT (Lawson official product page)",
+      "region_note": "関東地域の栄養成分を参照。アレルゲンは未確認のため、必ず店頭ラベルで確認してください。"
     }
   ]
 }

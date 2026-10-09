@@ -540,6 +540,86 @@
       "source_evidence": "https://www.lawson.co.jp/sp/recommend/original/detail/1532845_2168.html",
       "reviewed_by": "ChatGPT (Lawson official product page)",
       "region_note": "関東地域の栄養成分を参照。アレルゲンは未確認のため、必ず店頭ラベルで確認してください。"
+    },
+    {
+      "id": "family-salt-onigiri",
+      "chain": "family",
+      "name": "塩おむすび",
+      "category": "staple",
+      "price": 149,
+      "kcal": 186,
+      "protein": 2.6,
+      "fat": 1.1,
+      "carbs": 41.7,
+      "source_url": "https://www.family.co.jp/goods/omusubi/0411554.html",
+      "verified_at": "2026-10-10",
+      "status": "verified",
+      "allergens": [],
+      "source_evidence": "https://www.family.co.jp/goods/omusubi/0411554.html",
+      "reviewed_by": "ChatGPT (FamilyMart official product detail)",
+      "region_note": "地域・店舗・規格により価格や栄養成分が異なる場合があります。購入時に商品ラベルを確認してください。"
+    },
+    {
+      "id": "family-ume-onigiri",
+      "chain": "family",
+      "name": "手巻 紀州南高梅",
+      "category": "staple",
+      "price": 198,
+      "kcal": 179,
+      "protein": 3.2,
+      "fat": 1.1,
+      "carbs": 39.4,
+      "source_url": "https://www.family.co.jp/goods/omusubi/0410137.html",
+      "verified_at": "2026-10-10",
+      "status": "verified",
+      "allergens": [],
+      "source_evidence": "https://www.family.co.jp/goods/omusubi/0410137.html",
+      "reviewed_by": "ChatGPT (FamilyMart official product detail)",
+      "region_note": "地域・店舗・規格により価格や栄養成分が異なる場合があります。購入時に商品ラベルを確認してください。"
+    },
+    {
+      "id": "family-salmon-onigiri",
+      "chain": "family",
+      "name": "手巻 紅しゃけ",
+      "category": "staple",
+      "price": 235,
+      "kcal": 170,
+      "protein": 4.1,
+      "fat": 1.6,
+      "carbs": 35.1,
+      "source_url": "https://www.family.co.jp/goods/omusubi/0410151.html",
+      "verified_at": "2026-10-10",
+      "status": "verified",
+      "allergens": [
+        "さけ"
+      ],
+      "source_evidence": "https://www.family.co.jp/goods/omusubi/0410151.html",
+      "reviewed_by": "ChatGPT (FamilyMart official product detail)",
+      "region_note": "地域・店舗・規格により価格や栄養成分が異なる場合があります。購入時に商品ラベルを確認してください。"
+    },
+    {
+      "id": "family-salmon-tuna-set",
+      "chain": "family",
+      "name": "おむすび2個セット（鮭・ツナマヨネーズ）",
+      "category": "staple",
+      "price": 388,
+      "kcal": 349,
+      "protein": 5.9,
+      "fat": 5.3,
+      "carbs": 69.9,
+      "source_url": "https://www.family.co.jp/goods/omusubi/0414142.html",
+      "verified_at": "2026-10-10",
+      "status": "verified",
+      "allergens": [
+        "小麦",
+        "卵",
+        "さけ",
+        "大豆",
+        "りんご"
+      ],
+      "source_evidence": "https://www.family.co.jp/goods/omusubi/0414142.html",
+      "reviewed_by": "ChatGPT (FamilyMart official product detail)",
+      "region_note": "地域・店舗・規格により価格や栄養成分が異なる場合があります。購入時に商品ラベルを確認してください。"
     }
   ]
 }

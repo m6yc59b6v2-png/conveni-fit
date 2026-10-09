@@ -384,6 +384,46 @@
       "source_evidence": "https://www.sej.co.jp/products/a/item/040151/",
       "reviewed_by": "ChatGPT (official product page review)",
       "region_note": "新潟県・北陸限定。ほかの地域では購入できない場合があります"
+    },
+    {
+      "id": "seven-chicken-soboro-rice",
+      "name": "銀しゃりむすび 鶏そぼろ",
+      "kcal": 192,
+      "protein": 4.2,
+      "fat": 2.4,
+      "carbs": 39.2,
+      "source_url": "https://www.sej.co.jp/products/a/item/044858",
+      "allergens": [
+        "小麦"
+      ],
+      "region_note": "関東・甲信越・北陸・東海・近畿・中国・四国・九州の一部で販売",
+      "chain": "seven",
+      "category": "staple",
+      "price": 160,
+      "status": "verified",
+      "verified_at": "2026-10-10",
+      "source_evidence": "https://www.sej.co.jp/products/a/item/044858",
+      "reviewed_by": "ChatGPT (official product page review)"
+    },
+    {
+      "id": "seven-negi-miso-rice",
+      "name": "銀しゃりむすび ねぎ味噌",
+      "kcal": 179,
+      "protein": 3,
+      "fat": 1.1,
+      "carbs": 40,
+      "source_url": "https://www.sej.co.jp/products/a/item/044857/",
+      "allergens": [
+        "小麦"
+      ],
+      "region_note": "関東・甲信越・北陸・東海・近畿・中国・四国で販売",
+      "chain": "seven",
+      "category": "staple",
+      "price": 160,
+      "status": "verified",
+      "verified_at": "2026-10-10",
+      "source_evidence": "https://www.sej.co.jp/products/a/item/044857/",
+      "reviewed_by": "ChatGPT (official product page review)"
     }
   ]
 }

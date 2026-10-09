@@ -2800,6 +2800,24 @@
       "source_evidence": "https://www.family.co.jp/goods/newgoods.html",
       "reviewed_by": null,
       "region_note": "公式商品一覧で商品名・掲載価格を確認。地域限定・仕様変更の可能性あり。栄養成分・アレルゲン未確認のため献立提案対象外。"
+    },
+    {
+      "id": "family-catalog-023",
+      "chain": "family",
+      "name": "どかっとツイストサンド（カスタード&ホイップ）",
+      "category": "staple",
+      "price": 198,
+      "kcal": null,
+      "protein": null,
+      "fat": null,
+      "carbs": null,
+      "source_url": "https://www.family.co.jp/goods/newgoods.html",
+      "verified_at": null,
+      "status": "review",
+      "allergens": [],
+      "source_evidence": "https://www.family.co.jp/goods/newgoods.html",
+      "reviewed_by": null,
+      "region_note": "2026年10月6日週のファミリーマート公式新商品一覧。栄養成分・アレルゲン未確認のため献立提案対象外。"
     }
   ]
 }

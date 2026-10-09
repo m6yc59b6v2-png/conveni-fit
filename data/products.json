@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-09T17:42:46+00:00",
+  "updated_at": "2026-10-10T00:00:00+09:00",
   "products": [
     {
       "id": "seven-chicken",
@@ -363,6 +363,27 @@
       ],
       "source_evidence": "https://www.lawson.co.jp/recommend/original/detail/1488047_1996.html",
       "reviewed_by": "ChatGPT (official product page review)"
+    },
+    {
+      "id": "seven-egg-rice-niigiri",
+      "chain": "seven",
+      "name": "味付海苔おにぎり たまご醤油",
+      "category": "staple",
+      "price": 214,
+      "kcal": 199,
+      "protein": 4.9,
+      "fat": 4,
+      "carbs": 36.8,
+      "source_url": "https://www.sej.co.jp/products/a/item/040151/",
+      "verified_at": "2026-10-10",
+      "status": "verified",
+      "allergens": [
+        "卵",
+        "小麦"
+      ],
+      "source_evidence": "https://www.sej.co.jp/products/a/item/040151/",
+      "reviewed_by": "ChatGPT (official product page review)",
+      "region_note": "新潟県・北陸限定。ほかの地域では購入できない場合があります"
     }
   ]
 }

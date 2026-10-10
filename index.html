@@ -114,18 +114,24 @@ function suggest(){
  }
 
  const options=[];
- for(const s of staple)for(const p of prot)for(const v of veg){
-   const price=s.price+p.price+v.price;
-   options.push({items:[s,p,v],price,kcal:s.kcal+p.kcal+v.kcal,protein:s.protein+p.protein+v.protein,
-     fat:[s,p,v].every(x=>x.fat!=null)?s.fat+p.fat+v.fat:null,
-     carbs:[s,p,v].every(x=>x.carbs!=null)?s.carbs+p.carbs+v.carbs:null});
+ // Budget-friendly: allow a staple + protein meal when a three-item meal is too costly.
+ // All items remain verified; never fabricate prices or nutrition data.
+ const addOption=items=>{
+   options.push({items,price:items.reduce((n,x)=>n+x.price,0),
+     kcal:items.reduce((n,x)=>n+x.kcal,0),protein:items.reduce((n,x)=>n+x.protein,0),
+     fat:items.every(x=>x.fat!=null)?items.reduce((n,x)=>n+x.fat,0):null,
+     carbs:items.every(x=>x.carbs!=null)?items.reduce((n,x)=>n+x.carbs,0):null});
+ };
+ for(const s of staple)for(const p of prot){
+   addOption([s,p]);
+   for(const v of veg)addOption([s,p,v]);
  }
  const score=m=>goal==='muscle'?-(m.protein*7+m.kcal*.15):goal==='diet'?(m.kcal-m.protein*5):Math.abs(m.price-budget/3);
  options.sort((a,b)=>score(a)-score(b));
  const affordable=options.filter(m=>m.price<=budget/3);
  if(!affordable.length){
    const cheapest=options.reduce((a,b)=>a.price<=b.price?a:b);
-   $('result').innerHTML=`<div class="warning"><strong>現在の予算では3食を組めません。</strong><p>最も安い組み合わせでも1食${yen(cheapest.price)}、3食で${yen(cheapest.price*3)}が必要です。予算を増やすか、条件を変更してください。</p></div>`;
+   $('result').innerHTML=`<div class="warning"><strong>現在の予算では3食を組めません。</strong><p>現在の確認済み商品では、主食＋たんぱく質源の最安組み合わせが1食${yen(cheapest.price)}、3食で${yen(cheapest.price*3)}です。予算を増やすか、コンビニ・除外条件を変更してください。</p></div>`;
    return;
  }
 
@@ -144,7 +150,8 @@ function suggest(){
   const sameMeal=(i===j?1:0)+(j===k?1:0)+(i===k?1:0);
   const desirability=picks.reduce((n,m)=>n+score(m),0);
   const tie=((i*17+j*37+k*53+suggestionVariant*101)%29)*.08;
-  const value=repeats*100000+sameMeal*10000+desirability+tie;
+  const twoItemMeals=picks.filter(m=>m.items.length===2).length;
+  const value=repeats*100000+sameMeal*10000+twoItemMeals*200+desirability+tie;
   if(!best||value<best.value)best={value,picks};
  }
  if(best){
@@ -160,8 +167,11 @@ function suggest(){
  const total=meals.reduce((a,m)=>a+m.price,0);
  const kcalTotal=meals.reduce((a,m)=>a+m.kcal,0);
  const proteinTotal=meals.reduce((a,m)=>a+m.protein,0);
+ const twoItemCount=meals.filter(m=>m.items.length===2).length;
  const macro=m=>`${Math.round(m.kcal)}kcal ／ P ${m.protein.toFixed(1)}g ／ F ${m.fat==null?'未確認':m.fat.toFixed(1)+'g'} ／ C ${m.carbs==null?'未確認':m.carbs.toFixed(1)+'g'}`;
  $('result').innerHTML=`<p class="warning">確認済み商品を使った買い物候補です。栄養バランスや必要エネルギーを満たす保証はありません。野菜のドレッシング等は別売の場合があります。地域・店頭表示とアレルゲン情報を必ず確認してください。</p>`+
+ (twoItemCount?'<p class="result-note">💡 節約のため、一部の食事は主食＋たんぱく質源の2品にしています。野菜や果物なども、無理のない範囲でほかの食事と合わせて補ってください。</p>':'')+
+ (kcalTotal<1200?'<p class="warning">⚠ この候補の1日合計エネルギーは少なめです。これだけで1日の食事を済ませることを勧めるものではありません。食事量は年齢・活動量・健康状態に応じて調整してください。</p>':'')+
  (repeats?`<p class="result-note">※現在の商品数・予算・除外条件では、${repeats}件の商品が別の食事にも登場します。商品が増えると重複を減らせます。</p>`:'<p class="result-note">✨ 同じ商品が重ならない組み合わせを優先しました。</p>')+
  meals.map(m=>`<div class="meal"><h3>${m.name}</h3><ul>${m.items.map(p=>`<li>${escapeHtml(p.name)}（${names[p.chain]}）</li>`).join('')}</ul><div class="totals">${yen(m.price)} ／ ${macro(m)}</div></div>`).join('')+
  `<div class="stat"><strong>1日合計 ${yen(total)} ／ ${Math.round(kcalTotal)}kcal ／ P ${proteinTotal.toFixed(1)}g</strong><p class="small">予算残り ${yen(budget-total)}。1日分の必要栄養量を満たすことを意味しません。</p></div><div class="actions"><button id="copy">買い物メモをコピー</button><button class="secondary" id="another">もう一度提案</button></div>`;

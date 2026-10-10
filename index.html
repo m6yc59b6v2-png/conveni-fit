@@ -58,7 +58,7 @@ header .muted{letter-spacing:.055em;font-size:12px}
 <section class="hero"><div class="hero-copy"><span class="hero-eyebrow">YOUR DAILY WELLNESS</span><h2>コンビニで、<br>心と体にやさしい選択を。</h2><p>毎日の食事をもっとかんたんに、もっと健康に。<br>公式情報を確認した商品から、あなたに合う組み合わせを。</p></div><div class="metrics"><div class="metric"><strong id="metricAll">—</strong><span>登録商品</span></div><div class="metric"><strong id="metricVerified">—</strong><span>確認済み</span></div><div class="metric"><strong>3社</strong><span>対象コンビニ</span></div></div></section><section class="card"><h2>あなたに合った組み合わせを探す</h2><div class="grid">
 <div><label for="chain">コンビニ</label><select id="chain"><option value="seven">セブン‐イレブン</option><option value="family">ファミリーマート</option><option value="lawson" selected>ローソン</option><option value="any">3社から選ぶ</option></select></div>
 <div><label for="goal">目標</label><select id="goal"><option value="balance">食生活を整える</option><option value="diet">減量・体脂肪管理</option><option value="muscle">筋肉づくり・増量</option></select></div>
-<div><label for="budget">1日予算（円）</label><input id="budget" type="number" min="300" max="10000" step="100" value="1800"></div>
+<div><label for="budget">1日予算（円・目安1,200円）</label><input id="budget" type="number" min="300" max="10000" step="100" value="1200"></div>
 <div><label for="exclude">除外する食材</label><select id="exclude"><option value="">なし</option><option value="卵">卵</option><option value="鶏肉">鶏肉</option></select></div>
 </div><div class="actions"><button id="suggest">献立を提案する</button><button class="secondary" id="refresh">商品データを再読込</button></div><p class="muted" id="status" aria-live="polite">商品データを読み込んでいます…</p></section>
 <section class="card"><h2>今日の献立候補</h2><div id="result" class="empty">条件を選んで「献立を提案する」を押してね。</div></section>
@@ -107,8 +107,8 @@ function suggest(){
  const pool=db.products.filter(p=>p.status==='verified'&&p.price!=null&&p.kcal!=null&&p.protein!=null&&(chain==='any'||p.chain===chain)&&(!ex||!p.allergens.includes(ex)));
  const cat=c=>pool.filter(p=>p.category===c).sort((a,b)=>goal==='muscle'?b.protein-a.protein:a.price-b.price);
  const staple=cat('staple'),prot=cat('protein'),veg=cat('vegetable');
- if(!staple.length||!prot.length||!veg.length){
- const missing=[!staple.length?'主食':null,!prot.length?'たんぱく質源':null,!veg.length?'野菜':null].filter(Boolean).join('・');
+ if(!staple.length||!prot.length){
+ const missing=[!staple.length?'主食':null,!prot.length?'たんぱく質源':null].filter(Boolean).join('・');
  $('result').innerHTML=`<div class="warning"><strong>このコンビニでは献立を確定できません。</strong><p>確認済みの「${missing}」が不足しています。ローソンを選ぶと現在の登録データで献立候補を表示できます。</p><button id="tryLawson" type="button">ローソンで献立を試す</button></div>`;
  $('tryLawson').onclick=()=>{$('chain').value='lawson';suggest();};return;
  }
@@ -128,19 +128,19 @@ function suggest(){
  }
  const score=m=>goal==='muscle'?-(m.protein*7+m.kcal*.15):goal==='diet'?(m.kcal-m.protein*5):Math.abs(m.price-budget/3);
  options.sort((a,b)=>score(a)-score(b));
- const affordable=options.filter(m=>m.price<=budget/3);
- if(!affordable.length){
+ const minimumPrice=Math.min(...options.map(m=>m.price));
+ if(minimumPrice*3>budget){
    const cheapest=options.reduce((a,b)=>a.price<=b.price?a:b);
    $('result').innerHTML=`<div class="warning"><strong>現在の予算では3食を組めません。</strong><p>現在の確認済み商品では、主食＋たんぱく質源の最安組み合わせが1食${yen(cheapest.price)}、3食で${yen(cheapest.price*3)}です。予算を増やすか、コンビニ・除外条件を変更してください。</p></div>`;
    return;
  }
 
- const meals=[],used=new Map(),minimumPrice=Math.min(...options.map(x=>x.price));
+ const meals=[],used=new Map();
  // Optimise the whole day instead of greedily choosing breakfast first.
  const candidateMeals=options.filter(m=>m.price<=budget-2*minimumPrice);
- const shortlist=candidateMeals.slice().sort((a,b)=>score(a)-score(b)).slice(0,110);
- const cheap=options.slice().sort((a,b)=>a.price-b.price).slice(0,60);
- const candidates=[...new Map([...shortlist,...cheap].map(m=>[m.items.map(p=>p.id).join('|'),m])).values()].slice(0,110);
+ const shortlist=candidateMeals.slice().sort((a,b)=>score(a)-score(b)).slice(0,65);
+ const cheap=candidateMeals.slice().sort((a,b)=>a.price-b.price).slice(0,65);
+ const candidates=[...new Map([...shortlist,...cheap].map(m=>[m.items.map(p=>p.id).join('|'),m])).values()].slice(0,85);
  let best=null;
  for(let i=0;i<candidates.length;i++)for(let j=i;j<candidates.length;j++)for(let k=j;k<candidates.length;k++){
   const picks=[candidates[i],candidates[j],candidates[k]],sum=picks.reduce((n,m)=>n+m.price,0);

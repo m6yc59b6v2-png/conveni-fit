@@ -2818,6 +2818,54 @@
       "source_evidence": "https://www.family.co.jp/goods/newgoods.html",
       "reviewed_by": null,
       "region_note": "2026年10月6日週のファミリーマート公式新商品一覧。栄養成分・アレルゲン未確認のため献立提案対象外。"
+    },
+    {
+      "id": "family-boiled-egg-peeled-review",
+      "chain": "family",
+      "name": "ゆでたまご（からむき）",
+      "category": "protein",
+      "price": 141,
+      "kcal": null,
+      "protein": null,
+      "fat": null,
+      "carbs": null,
+      "source_url": "https://www.family.co.jp/goods/chilleddaily/2540078.html",
+      "verified_at": null,
+      "status": "review",
+      "allergens": [],
+      "source_evidence": "公式商品ページで税込141円を確認。栄養成分・アレルゲン未確認のため献立提案対象外。"
+    },
+    {
+      "id": "family-chicken-stick-herbs-review",
+      "chain": "family",
+      "name": "たんぱく質12.2g サラダチキンスティック 3種のハーブ&スパイス",
+      "category": "protein",
+      "price": 198,
+      "kcal": null,
+      "protein": 12.2,
+      "fat": null,
+      "carbs": null,
+      "source_url": "https://www.family.co.jp/goods/sidedishes/2234687.html",
+      "verified_at": null,
+      "status": "review",
+      "allergens": [],
+      "source_evidence": "公式商品ページで税込198円・商品名のたんぱく質12.2gを確認。熱量・アレルゲン未確認のため献立提案対象外。"
+    },
+    {
+      "id": "family-chicken-stick-smoke-review",
+      "chain": "family",
+      "name": "たんぱく質10.6g サラダチキンスティック スモーク",
+      "category": "protein",
+      "price": 198,
+      "kcal": null,
+      "protein": 10.6,
+      "fat": null,
+      "carbs": null,
+      "source_url": "https://www.family.co.jp/goods/sidedishes/2234427.html",
+      "verified_at": null,
+      "status": "review",
+      "allergens": [],
+      "source_evidence": "公式商品ページで税込198円・商品名のたんぱく質10.6gを確認。熱量・アレルゲン未確認のため献立提案対象外。"
     }
   ]
 }

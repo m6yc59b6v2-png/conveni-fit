@@ -136,7 +136,7 @@ function suggestOne(){
  $('copy').onclick=()=>{const memo=mealTime+': '+items.map(p=>p.name).join('、')+'\n合計 '+yen(selected.price);if(navigator.clipboard?.writeText)navigator.clipboard.writeText(memo).then(()=>alert('コピーしました')).catch(()=>prompt('こちらをコピーしてください',memo));else prompt('こちらをコピーしてください',memo);};
  $('planSuggestedMeal').onclick=()=>{
   const plan={date:localDate(),meal:mealTime,items:items.map(p=>({id:p.id,name:p.name,kcal:p.kcal,protein:p.protein})),price:selected.price};
-  try{const existing=JSON.parse(localStorage.getItem('conveni-fit-meal-plan-v1')||'null');if(existing&&Array.isArray(existing.items)&&!confirm('保存済みの献立予定があります。新しい予定で上書きしますか？'))return;localStorage.setItem('conveni-fit-meal-plan-v1',JSON.stringify(plan));}
+  try{const plans=readMealPlans();const existing=plans.find(p=>p.date===plan.date&&p.meal===plan.meal);if(existing&&!confirm('同じ日・同じ食事の予定があります。上書きしますか？'))return;writeMealPlans([...plans.filter(p=>!(p.date===plan.date&&p.meal===plan.meal)),plan]);}
   catch(e){alert('予定を保存できませんでした。ブラウザの保存設定を確認してください。');return;}
   $('planSuggestedMeal').disabled=true;
   $('planSuggestedMeal').textContent='予定に保存しました';
@@ -443,14 +443,29 @@ function saveDiary(){
  catch(e){$('diaryMessage').textContent='保存できませんでした。ブラウザの空き容量や設定を確認してください。';return false;}
 }
 const MEAL_PLAN_KEY='conveni-fit-meal-plan-v1';
+function readMealPlans(){
+ try{
+  const saved=JSON.parse(localStorage.getItem(MEAL_PLAN_KEY)||'null');
+  if(Array.isArray(saved))return saved.filter(p=>p&&p.date&&p.meal&&Array.isArray(p.items));
+  if(saved&&saved.date&&saved.meal&&Array.isArray(saved.items))return [saved];
+ }catch(e){}
+ return [];
+}
+function writeMealPlans(plans){localStorage.setItem(MEAL_PLAN_KEY,JSON.stringify(plans));}
 function renderMealPlan(){
  const el=$('savedMealPlan');if(!el)return;
- let plan=null;
- try{plan=JSON.parse(localStorage.getItem(MEAL_PLAN_KEY)||'null');}catch(e){}
- if(!plan||!Array.isArray(plan.items)||!plan.items.length){el.innerHTML='<p class="muted">保存した献立の予定はありません。</p>';return;}
- el.innerHTML='<p><strong>'+escapeHtml(plan.date)+'・'+escapeHtml(plan.meal)+'</strong>（予定・未摂取）</p><ul>'+plan.items.map(x=>'<li>'+escapeHtml(x.name)+'</li>').join('')+'</ul><div class="actions"><button type="button" id="confirmMealPlan">食べたので記録する</button><button type="button" class="secondary" id="clearMealPlan">予定を削除</button></div>';
- $('clearMealPlan').onclick=()=>{localStorage.removeItem(MEAL_PLAN_KEY);renderMealPlan();};
- $('confirmMealPlan').onclick=()=>{
+ const plans=readMealPlans().sort((a,b)=>a.date.localeCompare(b.date)||['朝食','昼食','夕食','間食'].indexOf(a.meal)-['朝食','昼食','夕食','間食'].indexOf(b.meal));
+ if(!plans.length){el.innerHTML='<p class="muted">保存した献立の予定はありません。</p>';return;}
+ el.innerHTML='<h3>食べる予定の献立</h3>'+plans.map((plan,i)=>'<div class="meal"><p><strong>'+escapeHtml(plan.date)+'・'+escapeHtml(plan.meal)+'</strong>（予定・未摂取）</p><ul>'+plan.items.map(x=>'<li>'+escapeHtml(x.name)+'</li>').join('')+'</ul><div class="actions"><button type="button" data-confirm-plan="'+i+'">食べたので記録する</button><button type="button" class="secondary" data-clear-plan="'+i+'">予定を削除</button></div></div>').join('');
+ el.querySelectorAll('[data-clear-plan]').forEach(btn=>btn.onclick=()=>{
+  const current=readMealPlans();
+  const selected=plans[Number(btn.dataset.clearPlan)];
+  const next=current.filter(p=>!(p.date===selected.date&&p.meal===selected.meal));
+  try{writeMealPlans(next);}catch(e){alert('予定を削除できませんでした。');return;}
+  renderMealPlan();
+ });
+ el.querySelectorAll('[data-confirm-plan]').forEach(btn=>btn.onclick=()=>{
+  const plan=plans[Number(btn.dataset.confirmPlan)];
   const before=diaryRecords.length;
   for(const item of plan.items)diaryRecords.push({
    id:Date.now().toString(36)+'-'+Math.random().toString(36).slice(2),
@@ -458,10 +473,10 @@ function renderMealPlan(){
    note:'保存した献立の予定から食事記録へ',photo:null
   });
   if(!saveDiary()){diaryRecords.splice(before);return;}
-  localStorage.removeItem(MEAL_PLAN_KEY);
+  try{writeMealPlans(readMealPlans().filter(p=>!(p.date===plan.date&&p.meal===plan.meal)));}catch(e){alert('食事は記録されましたが、予定の削除に失敗しました。重複記録に注意してください。');return;}
   $('diaryDate').value=plan.date;
   renderDiary();renderMealPlan();
- };
+ });
 }
 $('diaryEntries').insertAdjacentHTML('beforebegin','<section id="savedMealPlan" aria-label="保存した献立の予定"></section>');
 renderMealPlan();

@@ -62,6 +62,7 @@ header .muted{letter-spacing:.055em;font-size:12px}
 <nav class="app-nav" aria-label="アプリのページ"><button type="button" class="nav-item active" data-page-button="body" aria-current="page">① からだ</button><button type="button" class="nav-item" data-page-button="goal">② 目的</button><button type="button" class="nav-item" data-page-button="meals">③ 献立</button><button type="button" class="nav-item" data-page-button="diary">④ 日記</button><button type="button" class="nav-item" data-page-button="products">⑤ 商品</button></nav>
 <section class="hero"><div class="hero-copy"><span class="hero-eyebrow">YOUR DAILY WELLNESS</span><h2>コンビニで、<br>心と体にやさしい選択を。</h2><p>毎日の食事をもっとかんたんに、もっと健康に。<br>公式情報を確認した商品から、あなたに合う組み合わせを。</p></div><div class="metrics"><div class="metric"><strong id="metricAll">—</strong><span>登録商品</span></div><div class="metric"><strong id="metricVerified">—</strong><span>確認済み</span></div><div class="metric"><strong>3社</strong><span>対象コンビニ</span></div></div></section><section class="card"><h2>あなたに合った組み合わせを探す</h2><div class="grid">
 <div><label for="chain">コンビニ</label><select id="chain"><option value="seven">セブン‐イレブン</option><option value="family">ファミリーマート</option><option value="lawson" selected>ローソン</option><option value="any">3社から選ぶ</option></select></div>
+<div><label for="shoppingRegion">購入する地域</label><select id="shoppingRegion"><option value="kanto" selected>関東（埼玉・東京など）</option><option value="kinki">近畿・四国</option><option value="other">その他の地域</option></select><p class="small">地域限定商品は対象地域以外の献立から除外します。全国販売でも店舗により取扱いが異なります。</p></div>
 <div><label for="goal">目標</label><select id="goal"><option value="balance">食生活を整える</option><option value="diet">減量・体脂肪管理</option><option value="muscle">筋肉づくり・増量</option></select></div>
 <div><label for="mealMode">提案する食事</label><select id="mealMode"><option value="day">1日3食</option><option value="single">1食だけ</option></select></div><div><label for="mealTime">食事の時間</label><select id="mealTime" disabled><option value="昼食">昼食</option><option value="朝食">朝食</option><option value="夕食">夕食</option></select></div><div><label for="budget" id="budgetLabel">1日予算（円）</label><input id="budget" type="number" min="100" max="10000" step="100" value="1800"></div>
 <div><label for="exclude">苦手な食材・避けたいもの（複数選択可）</label><div id="exclude" class="exclude-options" role="group" aria-label="避けたい食材"><label><input type="checkbox" value="卵">卵</label><label><input type="checkbox" value="鶏肉">鶏肉</label><label><input type="checkbox" value="豚肉">豚肉</label><label><input type="checkbox" value="さけ">鮭</label><label><input type="checkbox" value="大豆">大豆</label><label><input type="checkbox" value="乳">乳製品</label><label><input type="checkbox" value="小麦">小麦</label><label><input type="checkbox" value="ごま">ごま</label><label><input type="checkbox" value="りんご">りんご</label></div><p class="muted">避けたい食材を選ぶと、アレルゲン情報が未登録の商品も候補から除きます。ただし原材料や製造時の混入まで判定できず、アレルギー対応は保証しません。購入前に必ず商品の表示をご確認ください。</p></div>
@@ -108,10 +109,18 @@ function renderHistory(){
 }
 function selectedExclusions(){return [...document.querySelectorAll('#exclude input:checked')].map(x=>x.value);}
 function isExcludedProduct(p,tags){if(!tags.length)return false;if(!Array.isArray(p.allergens)||!p.allergens.length)return true;return tags.some(tag=>p.allergens.some(a=>a===tag||(tag==='乳'&&a==='乳成分')));}
+function isAvailableInRegion(p){
+ const note=p.region_note||'';
+ const region=$('shoppingRegion').value;
+ if(/近畿・四国限定/.test(note))return region==='kinki';
+ if(/茨城・栃木・群馬・埼玉限定/.test(note))return region==='kanto';
+ if(/関東・関西/.test(note))return region==='kanto'||region==='kinki';
+ return true;
+}
 function suggestOne(){
  const chain=$('chain').value,goal=$('goal').value,budget=Number($('budget').value),excluded=selectedExclusions(),mealTime=$('mealTime').value;
  if(!Number.isFinite(budget)||budget<100){$('result').textContent='1食の予算を100円以上に設定してください。';return;}
- const pool=db.products.filter(p=>p.status==='verified'&&Number.isFinite(p.price)&&p.price>=0&&Number.isFinite(p.kcal)&&p.kcal>=0&&Number.isFinite(p.protein)&&p.protein>=0&&(chain==='any'||p.chain===chain)&&!isExcludedProduct(p,excluded));
+ const pool=db.products.filter(p=>p.status==='verified'&&Number.isFinite(p.price)&&p.price>=0&&Number.isFinite(p.kcal)&&p.kcal>=0&&Number.isFinite(p.protein)&&p.protein>=0&&(chain==='any'||p.chain===chain)&&isAvailableInRegion(p)&&!isExcludedProduct(p,excluded));
  const staple=pool.filter(p=>p.category==='staple'),protein=pool.filter(p=>p.category==='protein'),vegetable=pool.filter(p=>p.category==='vegetable');
  const options=[];
  // 3品セットを優先し、低予算では主食＋たんぱく質源の2品セットも提案。
@@ -180,7 +189,7 @@ function suggest(){
 
  const chain=$('chain').value,goal=$('goal').value,budget=Number($('budget').value),excluded=selectedExclusions();
  if(!Number.isFinite(budget)||budget<300){$('result').textContent='予算を300円以上に設定してください。';return;}
- const pool=db.products.filter(p=>p.status==='verified'&&Number.isFinite(p.price)&&p.price>=0&&Number.isFinite(p.kcal)&&p.kcal>=0&&Number.isFinite(p.protein)&&p.protein>=0&&(chain==='any'||p.chain===chain)&&!isExcludedProduct(p,excluded));
+ const pool=db.products.filter(p=>p.status==='verified'&&Number.isFinite(p.price)&&p.price>=0&&Number.isFinite(p.kcal)&&p.kcal>=0&&Number.isFinite(p.protein)&&p.protein>=0&&(chain==='any'||p.chain===chain)&&isAvailableInRegion(p)&&!isExcludedProduct(p,excluded));
  const cat=c=>pool.filter(p=>p.category===c).sort((a,b)=>goal==='muscle'?b.protein-a.protein:a.price-b.price);
  const staple=cat('staple'),prot=cat('protein'),veg=cat('vegetable');
  if(!staple.length||!prot.length||!veg.length){

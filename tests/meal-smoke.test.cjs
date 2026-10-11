@@ -9,7 +9,7 @@ const script=html.match(/<script>([\s\S]*?)<\/script>/);
 assert(script,'main application script exists');
 const elements={chain:{value:'family'},goal:{value:'diet'},budget:{value:'1800'},exclude:{value:''},result:{innerHTML:'',textContent:''}};
 const $=id=>elements[id]??(elements[id]={innerHTML:'',textContent:'',value:'',addEventListener(){}});
-const context={document:{getElementById:$},navigator:{},window:{},console,alert(){},prompt(){},setTimeout(){},Date,Map,Set,Math,Number,String,Array,Promise};
+const context={document:{getElementById:$,querySelectorAll:()=>[]},navigator:{},window:{},console,alert(){},prompt(){},setTimeout(){},Date,Map,Set,Math,Number,String,Array,Promise};
 vm.createContext(context);
 // Extract only suggestion function, keeping other page features untouched.
 const start=script[1].indexOf('function suggest(){');

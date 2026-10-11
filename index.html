@@ -52,7 +52,7 @@ header .muted{letter-spacing:.055em;font-size:12px}
 .hero .metric{background:#fffaf3dd;backdrop-filter:blur(5px);border-color:#e6d6c6}
 .hero .metric strong{color:#76503a}
 @media(max-width:650px){.hero{min-height:330px;padding:26px 19px 19px;border-radius:20px}.hero:before{background-position:72% center}.hero:after{background:linear-gradient(90deg,#f9f0e9 0%,#f9f0e9ed 44%,#f9f0e9a8 72%,#f9f0e958 100%)}.hero-copy{max-width:100%}.hero h2{font-size:clamp(23px,5.8vw,31px)}.hero p{font-size:12px}.hero .metrics{margin-top:23px}.hero .metric{padding:10px 7px}.hero .metric strong{font-size:20px}}
-.logo{font-family:Georgia,serif;font-size:30px;color:#79543e;min-width:60px;text-align:center}.card h2{border-left:3px solid #c9a98d;padding-left:12px;line-height:1.4}</style></head><body><main>
+.logo{font-family:Georgia,serif;font-size:30px;color:#79543e;min-width:60px;text-align:center}.card h2{border-left:3px solid #c9a98d;padding-left:12px;line-height:1.4}</style><link rel="manifest" href="./manifest.webmanifest"></head><body><main>
 <header><div class="logo"><svg width="34" height="34" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M39 7C19 8 8 18 8 32c0 6 4 9 10 9C33 41 41 25 39 7Z" stroke="#8e6c51" stroke-width="2.2" stroke-linejoin="round"/><path d="M7 43c7-15 17-24 29-32" stroke="#8e6c51" stroke-width="2.2" stroke-linecap="round"/></svg></div><div><h1>Conveni Fit <span class="pill">β版</span></h1><div class="muted">コンビニで、ちょうどいい食事を。</div></div></header>
 <nav class="app-nav" aria-label="アプリのページ"><button type="button" class="nav-item active" data-page-button="body" aria-current="page">① からだ</button><button type="button" class="nav-item" data-page-button="goal">② 目的</button><button type="button" class="nav-item" data-page-button="meals">③ 献立</button><button type="button" class="nav-item" data-page-button="diary">④ 日記</button><button type="button" class="nav-item" data-page-button="products">⑤ 商品</button></nav>
 <section class="hero"><div class="hero-copy"><span class="hero-eyebrow">YOUR DAILY WELLNESS</span><h2>コンビニで、<br>心と体にやさしい選択を。</h2><p>毎日の食事をもっとかんたんに、もっと健康に。<br>公式情報を確認した商品から、あなたに合う組み合わせを。</p></div><div class="metrics"><div class="metric"><strong id="metricAll">—</strong><span>登録商品</span></div><div class="metric"><strong id="metricVerified">—</strong><span>確認済み</span></div><div class="metric"><strong>3社</strong><span>対象コンビニ</span></div></div></section><section class="card"><h2>あなたに合った組み合わせを探す</h2><div class="grid">
@@ -501,4 +501,4 @@ $('diaryExport').addEventListener('click',()=>{
 renderDiary();
 
 $('suggest').addEventListener('click',()=>{suggestionVariant=0;suggest();});$('refresh').addEventListener('click',load);load();
-</script></body></html>
+</script><script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(console.warn));}</script></body></html>

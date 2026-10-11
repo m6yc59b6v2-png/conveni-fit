@@ -126,7 +126,7 @@ function suggestOne(){
  '<div class="meal"><h3>'+escapeHtml(mealTime)+'のおすすめ</h3><ul>'+items.map(p=>'<li>'+escapeHtml(p.name)+'（'+names[p.chain]+'）</li>').join('')+'</ul><div class="totals">'+yen(selected.price)+' ／ '+macro+'</div></div>'+
  '<div class="stat"><strong>合計 '+yen(selected.price)+'</strong><p class="small">予算残り '+yen(budget-selected.price)+'。'+(items.length===2?'2品の組み合わせです。必要に応じて野菜なども追加してください。':'')+'</p></div>'+
  '<div class="actions"><button id="copy">買い物メモをコピー</button><button id="planSuggestedMeal" class="secondary">食べる予定に保存</button><button id="saveSuggestedMeal" class="secondary">食べたものとして記録</button><button class="secondary" id="another">もう一度提案</button></div>';
- $('copy').onclick=()=>{const memo=mealTime+': '+items.map(p=>p.name).join('、')+'\\n合計 '+yen(selected.price);if(navigator.clipboard?.writeText)navigator.clipboard.writeText(memo).then(()=>alert('コピーしました')).catch(()=>prompt('こちらをコピーしてください',memo));else prompt('こちらをコピーしてください',memo);};
+ $('copy').onclick=()=>{const memo=mealTime+': '+items.map(p=>p.name).join('、')+'\n合計 '+yen(selected.price);if(navigator.clipboard?.writeText)navigator.clipboard.writeText(memo).then(()=>alert('コピーしました')).catch(()=>prompt('こちらをコピーしてください',memo));else prompt('こちらをコピーしてください',memo);};
  $('planSuggestedMeal').onclick=()=>{
   const plan={date:localDate(),meal:mealTime,items:items.map(p=>({id:p.id,name:p.name,kcal:p.kcal,protein:p.protein})),price:selected.price};
   try{localStorage.setItem('conveni-fit-meal-plan-v1',JSON.stringify(plan));}

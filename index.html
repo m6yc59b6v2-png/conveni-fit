@@ -136,7 +136,7 @@ function suggestOne(){
  $('copy').onclick=()=>{const memo=mealTime+': '+items.map(p=>p.name).join('、')+'\n合計 '+yen(selected.price);if(navigator.clipboard?.writeText)navigator.clipboard.writeText(memo).then(()=>alert('コピーしました')).catch(()=>prompt('こちらをコピーしてください',memo));else prompt('こちらをコピーしてください',memo);};
  $('planSuggestedMeal').onclick=()=>{
   const plan={date:localDate(),meal:mealTime,items:items.map(p=>({id:p.id,name:p.name,kcal:p.kcal,protein:p.protein})),price:selected.price};
-  try{localStorage.setItem('conveni-fit-meal-plan-v1',JSON.stringify(plan));}
+  try{const existing=JSON.parse(localStorage.getItem('conveni-fit-meal-plan-v1')||'null');if(existing&&Array.isArray(existing.items)&&!confirm('保存済みの献立予定があります。新しい予定で上書きしますか？'))return;localStorage.setItem('conveni-fit-meal-plan-v1',JSON.stringify(plan));}
   catch(e){alert('予定を保存できませんでした。ブラウザの保存設定を確認してください。');return;}
   $('planSuggestedMeal').disabled=true;
   $('planSuggestedMeal').textContent='予定に保存しました';

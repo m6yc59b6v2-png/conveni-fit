@@ -125,8 +125,21 @@ function suggestOne(){
  $('result').innerHTML='<p class="warning">確認済み商品の組み合わせ例です。必要な栄養量を満たす保証はありません。アレルゲン・価格・在庫は必ず店頭表示をご確認ください。</p>'+
  '<div class="meal"><h3>'+escapeHtml(mealTime)+'のおすすめ</h3><ul>'+items.map(p=>'<li>'+escapeHtml(p.name)+'（'+names[p.chain]+'）</li>').join('')+'</ul><div class="totals">'+yen(selected.price)+' ／ '+macro+'</div></div>'+
  '<div class="stat"><strong>合計 '+yen(selected.price)+'</strong><p class="small">予算残り '+yen(budget-selected.price)+'。'+(items.length===2?'2品の組み合わせです。必要に応じて野菜なども追加してください。':'')+'</p></div>'+
- '<div class="actions"><button id="copy">買い物メモをコピー</button><button class="secondary" id="another">もう一度提案</button></div>';
+ '<div class="actions"><button id="copy">買い物メモをコピー</button><button id="saveSuggestedMeal" class="secondary">この献立を食事記録に保存</button><button class="secondary" id="another">もう一度提案</button></div>';
  $('copy').onclick=()=>{const memo=mealTime+': '+items.map(p=>p.name).join('、')+'\\n合計 '+yen(selected.price);if(navigator.clipboard?.writeText)navigator.clipboard.writeText(memo).then(()=>alert('コピーしました')).catch(()=>prompt('こちらをコピーしてください',memo));else prompt('こちらをコピーしてください',memo);};
+ $('saveSuggestedMeal').onclick=()=>{
+  const previousLength=diaryRecords.length;
+  const date=localDate();
+  for(const item of items)diaryRecords.push({
+   id:Date.now().toString(36)+'-'+Math.random().toString(36).slice(2),
+   date,meal:mealTime,name:item.name,kcal:item.kcal,protein:item.protein,
+   note:'献立提案から追加（食べた場合の記録）',photo:null
+  });
+  if(!saveDiary()){diaryRecords.splice(previousLength);return;}
+  $('diaryDate').value=date;renderDiary();
+  $('saveSuggestedMeal').disabled=true;
+  $('saveSuggestedMeal').textContent='食事記録に保存しました';
+ };
  $('another').onclick=()=>{suggestionVariant++;suggest();};
 }
 $('mealMode').addEventListener('change',()=>{

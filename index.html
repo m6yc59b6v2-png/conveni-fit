@@ -114,12 +114,12 @@ function suggestOne(){
  const pool=db.products.filter(p=>p.status==='verified'&&p.price!=null&&p.kcal!=null&&p.protein!=null&&(chain==='any'||p.chain===chain)&&!isExcludedProduct(p,excluded));
  const staple=pool.filter(p=>p.category==='staple'),protein=pool.filter(p=>p.category==='protein'),vegetable=pool.filter(p=>p.category==='vegetable');
  const options=[];
- // 3品セットを優先し、低予算では主食＋たんぱく質源など2品セットも提案。
+ // 3品セットを優先し、低予算では主食＋たんぱく質源の2品セットも提案。
  for(const s of staple)for(const p of protein){
   const pairs=[[s,p],...vegetable.map(v=>[s,p,v])];
   for(const items of pairs){const price=items.reduce((n,x)=>n+x.price,0);if(price<=budget)options.push({items,price,kcal:items.reduce((n,x)=>n+x.kcal,0),protein:items.reduce((n,x)=>n+x.protein,0)});}
  }
- for(const s of staple)for(const v of vegetable){const items=[s,v],price=s.price+v.price;if(price<=budget)options.push({items,price,kcal:s.kcal+v.kcal,protein:s.protein+v.protein});}
+ // A full-meal recommendation must contain a protein source; do not offer staple + vegetable alone.
  if(!options.length){$('result').innerHTML='<div class="warning"><strong>条件に合う1食が見つかりませんでした。</strong><p>予算を増やすか、コンビニ・除外条件を変更してください。現在は公式情報を確認した商品だけを使っています。</p></div>';return;}
  const score=m=>goal==='muscle'?-(m.protein*7+m.kcal*.15):goal==='diet'?m.kcal-m.protein*5:Math.abs(m.price-budget*.85)-m.protein*2;
  options.sort((a,b)=>score(a)-score(b)||b.items.length-a.items.length||a.price-b.price);

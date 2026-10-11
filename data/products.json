@@ -2642,20 +2642,26 @@
     {
       "id": "family-catalog-014",
       "chain": "family",
-      "name": "ぼんご監修 大きなおむすび まぐろたくあんと卵黄醤油だれ",
+      "name": "ぼんご監修　大きなおむすび　まぐろたくあんと卵黄醤油だれ",
       "category": "staple",
       "price": 321,
-      "kcal": null,
-      "protein": null,
-      "fat": null,
-      "carbs": null,
-      "source_url": "https://www.family.co.jp/goods/newgoods.html",
-      "verified_at": null,
-      "status": "review",
-      "allergens": [],
-      "source_evidence": "https://www.family.co.jp/goods/newgoods.html",
-      "reviewed_by": null,
-      "region_note": "公式商品一覧で商品名・掲載価格を確認。地域限定・仕様変更の可能性あり。栄養成分・アレルゲン未確認のため献立提案対象外。"
+      "kcal": 300,
+      "protein": 6.1,
+      "fat": 3.3,
+      "carbs": 62,
+      "source_url": "https://www.family.co.jp/goods/omusubi/0411998.html",
+      "verified_at": "2026-10-11",
+      "status": "verified",
+      "allergens": [
+        "小麦",
+        "卵",
+        "さば",
+        "大豆",
+        "りんご"
+      ],
+      "source_evidence": "https://www.family.co.jp/goods/omusubi/0411998.html",
+      "reviewed_by": "ChatGPT (official product listing)",
+      "region_note": "2026年10月6日発売。公式情報の価格・栄養・アレルゲンを記録。販売地域・店舗により取扱差あり。"
     },
     {
       "id": "family-catalog-015",
@@ -2854,30 +2860,6 @@
       "source_evidence": "https://mldata.lawson.co.jp/recommend/original/detail/1532771_1996.html",
       "reviewed_by": "ChatGPT (official nutrition listing)",
       "region_note": "公式ページで価格・PFC確認。アレルゲン未確認のため除外設定時は候補から外す。"
-    },
-    {
-      "id": "family-bongo-tuna-egg-riceball-202610",
-      "chain": "family",
-      "name": "ぼんご監修　大きなおむすび　まぐろたくあんと卵黄醤油だれ",
-      "category": "staple",
-      "price": 321,
-      "kcal": 300,
-      "protein": 6.1,
-      "fat": 3.3,
-      "carbs": 62,
-      "source_url": "https://www.family.co.jp/goods/omusubi/0411998.html",
-      "verified_at": "2026-10-11",
-      "status": "verified",
-      "allergens": [
-        "小麦",
-        "卵",
-        "さば",
-        "大豆",
-        "りんご"
-      ],
-      "source_evidence": "https://www.family.co.jp/goods/omusubi/0411998.html",
-      "reviewed_by": "ChatGPT (official product listing)",
-      "region_note": "2026年10月6日発売。公式情報の価格・栄養・アレルゲンを記録。販売地域・店舗により取扱差あり。"
     },
     {
       "id": "seven-levernira-kanto-202610",

@@ -169,10 +169,19 @@ function suggest(){
  meals.map(m=>`<div class="meal"><h3>${m.name}</h3><ul>${m.items.map(p=>`<li>${escapeHtml(p.name)}（${names[p.chain]}）</li>`).join('')}</ul><div class="totals">${yen(m.price)} ／ ${macro(m)}</div></div>`).join('')+
  `<div class="stat"><strong>1日合計 ${yen(total)} ／ ${Math.round(kcalTotal)}kcal ／ P ${proteinTotal.toFixed(1)}g</strong><p class="small">予算残り ${yen(budget-total)}。1日分の必要栄養量を満たすことを意味しません。</p></div><div class="actions"><button id="copy">買い物メモをコピー</button><button class="secondary" id="another">もう一度提案</button></div>`;
  $('copy').onclick=()=>{const memo=meals.map(m=>m.name+': '+m.items.map(p=>p.name).join('、')).join('\\n')+'\\n合計 '+yen(total);if(navigator.clipboard?.writeText){navigator.clipboard.writeText(memo).then(()=>alert('コピーしました')).catch(()=>prompt('こちらをコピーしてください',memo));}else prompt('こちらをコピーしてください',memo);};
- $('result').addEventListener('change',e=>{if(!e.target.matches('.shopping-check'))return;const checks=[...$('result').querySelectorAll('.shopping-check')];const done=checks.filter(x=>x.checked).length;$('shoppingProgress').textContent=done+' / '+checks.length+'種類を購入済み';},{once:false});
+
  $('another').onclick=()=>{suggestionVariant++;suggest();};
 }
 
+
+// Delegate once: repeated meal suggestions must not accumulate listeners.
+$('result').addEventListener('change',e=>{
+ if(!e.target.matches('.shopping-check'))return;
+ const checks=[...$('result').querySelectorAll('.shopping-check')];
+ const done=checks.filter(x=>x.checked).length;
+ const progress=$('shoppingProgress');
+ if(progress)progress.textContent=done+' / '+checks.length+'種類を購入済み';
+});
 
 const PROFILE_KEY='conveni-fit-profile-v1';
 function bmiCategory(b){return b<18.5?'低体重':b<25?'普通体重':b<30?'肥満（1度）':b<35?'肥満（2度）':b<40?'肥満（3度）':'肥満（4度）';}

@@ -2917,6 +2917,29 @@
       "source_evidence": "https://www.lawson.co.jp/sp/recommend/original/detail/1496314_2168.html",
       "reviewed_by": "ChatGPT (official product page)",
       "region_note": "70g。公式アレルゲン表の該当マークを確認できないため未登録。除外条件設定時は候補から外す。"
+    },
+    {
+      "id": "family-official-20261011-1",
+      "chain": "family",
+      "name": "【関東・関西】20品目のサラダ",
+      "category": "vegetable",
+      "price": 321,
+      "kcal": 192,
+      "protein": 3.9,
+      "fat": 11.8,
+      "carbs": 19.6,
+      "source_url": "https://www.family.co.jp/goods/salad/1212327.html",
+      "verified_at": "2026-10-11",
+      "status": "verified",
+      "allergens": [
+        "小麦",
+        "卵",
+        "ごま",
+        "大豆"
+      ],
+      "source_evidence": "https://www.family.co.jp/goods/salad/1212327.html",
+      "reviewed_by": "ChatGPT (official product page reviewed 2026-10-11)",
+      "region_note": "関東・関西、地域内に除外エリアあり。価格は公式税込価格を1円単位に切り上げ。アレルゲンは掲載の特定原材料等のみで完全網羅ではない。店頭表示優先。"
     }
   ]
 }

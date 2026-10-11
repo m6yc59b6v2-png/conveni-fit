@@ -2878,6 +2878,63 @@
       "source_evidence": "https://www.family.co.jp/goods/omusubi/0411998.html",
       "reviewed_by": "ChatGPT (official product listing)",
       "region_note": "2026年10月6日発売。公式情報の価格・栄養・アレルゲンを記録。販売地域・店舗により取扱差あり。"
+    },
+    {
+      "id": "seven-levernira-kanto-202610",
+      "chain": "seven",
+      "name": "たんぱく質が摂れる　レバニラ",
+      "category": "protein",
+      "price": 387,
+      "kcal": 349,
+      "protein": 34.7,
+      "fat": 15,
+      "carbs": 19.4,
+      "source_url": "https://www.sej.co.jp/products/a/item/100823/",
+      "verified_at": "2026-10-11",
+      "status": "verified",
+      "allergens": [
+        "乳",
+        "小麦"
+      ],
+      "source_evidence": "https://www.sej.co.jp/products/a/item/100823/",
+      "reviewed_by": "ChatGPT (official product page)",
+      "region_note": "茨城・栃木・群馬・埼玉限定。公式ページ掲載の特定原材料8品目のみ。その他アレルゲンは未確認。税込386.64円を予算計算用に387円へ切り上げ。"
+    },
+    {
+      "id": "lawson-crabstick-protein-salad-202610",
+      "chain": "lawson",
+      "name": "たんぱく質が摂れる　カニカマのサラダ",
+      "category": "protein",
+      "price": 516,
+      "kcal": 185,
+      "protein": 12.9,
+      "fat": 9.6,
+      "carbs": 13.1,
+      "source_url": "https://mldata.lawson.co.jp/recommend/original/detail/1532770_1996.html",
+      "verified_at": "2026-10-11",
+      "status": "verified",
+      "allergens": [],
+      "source_evidence": "https://mldata.lawson.co.jp/recommend/original/detail/1532770_1996.html",
+      "reviewed_by": "ChatGPT (official product page)",
+      "region_note": "北陸・沖縄は取扱なし。公式アレルゲン表の該当マークを確認できないため未登録。除外条件設定時は候補から外す。"
+    },
+    {
+      "id": "lawson-pumpkin-salad-202610",
+      "chain": "lawson",
+      "name": "国産かぼちゃのサラダ",
+      "category": "vegetable",
+      "price": 189,
+      "kcal": 83,
+      "protein": 1.6,
+      "fat": 0.8,
+      "carbs": 17.9,
+      "source_url": "https://www.lawson.co.jp/sp/recommend/original/detail/1496314_2168.html",
+      "verified_at": "2026-10-11",
+      "status": "verified",
+      "allergens": [],
+      "source_evidence": "https://www.lawson.co.jp/sp/recommend/original/detail/1496314_2168.html",
+      "reviewed_by": "ChatGPT (official product page)",
+      "region_note": "70g。公式アレルゲン表の該当マークを確認できないため未登録。除外条件設定時は候補から外す。"
     }
   ]
 }

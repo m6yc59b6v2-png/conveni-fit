@@ -122,39 +122,46 @@ function suggest(){
  }
  const score=m=>goal==='muscle'?-(m.protein*7+m.kcal*.15):goal==='diet'?(m.kcal-m.protein*5):Math.abs(m.price-budget/3);
  options.sort((a,b)=>score(a)-score(b));
- const affordable=options.filter(m=>m.price<=budget/3);
- if(!affordable.length){
-   const cheapest=options.reduce((a,b)=>a.price<=b.price?a:b);
-   $('result').innerHTML=`<div class="warning"><strong>現在の予算では3食を組めません。</strong><p>最も安い組み合わせでも1食${yen(cheapest.price)}、3食で${yen(cheapest.price*3)}が必要です。予算を増やすか、条件を変更してください。</p></div>`;
+ const cheapest=options.reduce((a,b)=>a.price<=b.price?a:b);
+ if(cheapest.price*3>budget){
+   $('result').innerHTML=`<div class="warning"><strong>現在の予算では3食を組めません。</strong><p>現行の「主食＋たんぱく質源＋野菜」構成では、最も安い1食が${yen(cheapest.price)}、3食で${yen(cheapest.price*3)}必要です。商品追加や構成の改善を進めています。</p></div>`;
    return;
  }
-
- const meals=[],used=new Map(),minimumPrice=Math.min(...options.map(x=>x.price));
- // Optimise the whole day instead of greedily choosing breakfast first.
- const candidateMeals=options.filter(m=>m.price<=budget-2*minimumPrice);
- const shortlist=candidateMeals.slice().sort((a,b)=>score(a)-score(b)).slice(0,110);
- const cheap=options.slice().sort((a,b)=>a.price-b.price).slice(0,60);
- const candidates=[...new Map([...shortlist,...cheap].map(m=>[m.items.map(p=>p.id).join('|'),m])).values()].slice(0,110);
- let best=null;
+ const meals=[],used=new Map(),minimumPrice=cheapest.price;
+ // Keep inexpensive options as well as goal-oriented options; don't assume each meal costs budget/3.
+ const viable=options.filter(m=>m.price<=budget-2*minimumPrice);
+ const bestGoal=viable.slice().sort((a,b)=>score(a)-score(b)).slice(0,55);
+ const cheapestOptions=viable.slice().sort((a,b)=>a.price-b.price).slice(0,55);
+ const diversified=viable.slice().sort((a,b)=>((a.items.map(x=>x.id).join('|').split('').reduce((n,c)=>n*31+c.charCodeAt(0),7)+suggestionVariant*97)>>>0)-((b.items.map(x=>x.id).join('|').split('').reduce((n,c)=>n*31+c.charCodeAt(0),7)+suggestionVariant*97)>>>0)).slice(0,35);
+ const candidates=[...new Map([...bestGoal,...cheapestOptions,...diversified].map(m=>[m.items.map(p=>p.id).join('|'),m])).values()].slice(0,120);
+ const ranked=[];
  for(let i=0;i<candidates.length;i++)for(let j=i;j<candidates.length;j++)for(let k=j;k<candidates.length;k++){
-  const picks=[candidates[i],candidates[j],candidates[k]],sum=picks.reduce((n,m)=>n+m.price,0);
-  if(sum>budget)continue;
-  const counts=new Map();for(const m of picks)for(const p of m.items)counts.set(p.id,(counts.get(p.id)||0)+1);
-  const repeats=[...counts.values()].reduce((n,c)=>n+Math.max(0,c-1),0);
-  const sameMeal=(i===j?1:0)+(j===k?1:0)+(i===k?1:0);
-  const desirability=picks.reduce((n,m)=>n+score(m),0);
-  const tie=((i*17+j*37+k*53+suggestionVariant*101)%29)*.08;
-  const value=repeats*100000+sameMeal*10000+desirability+tie;
-  if(!best||value<best.value)best={value,picks};
+   const picks=[candidates[i],candidates[j],candidates[k]],sum=picks.reduce((n,m)=>n+m.price,0);
+   if(sum>budget)continue;
+   const counts=new Map();for(const m of picks)for(const p of m.items)counts.set(p.id,(counts.get(p.id)||0)+1);
+   const repeats=[...counts.values()].reduce((n,c)=>n+Math.max(0,c-1),0);
+   const sameMeal=(i===j?1:0)+(j===k?1:0)+(i===k?1:0);
+   const desirability=picks.reduce((n,m)=>n+score(m),0);
+   const value=repeats*100000+sameMeal*10000+desirability;
+   // Meal order doesn't define uniqueness; products and quantities do.
+   const signature=[...counts.entries()].sort(([a],[b])=>a.localeCompare(b)).map(([id,n])=>id+':'+n).join('|');
+   if(!ranked.some(x=>x.signature===signature)){
+     ranked.push({value,picks,signature});
+     ranked.sort((a,b)=>a.value-b.value);
+     if(ranked.length>30)ranked.pop();
+   }
  }
- if(best){
-  const ordered=best.picks.slice().sort((a,b)=>a.kcal-b.kcal);
-  const rotation=suggestionVariant%3;
-  [ordered[rotation],ordered[(rotation+1)%3],ordered[(rotation+2)%3]].forEach((pick,i)=>{
+ if(!ranked.length){
+   $('result').innerHTML='<div class="warning">この条件では3食を組めませんでした。予算や除外条件を調整してください。</div>';return;
+ }
+ // Cycle through genuinely different baskets, rather than only rotating breakfast/lunch/dinner.
+ const selected=ranked[suggestionVariant%ranked.length];
+ const ordered=selected.picks.slice().sort((a,b)=>a.kcal-b.kcal);
+ const rotation=Math.floor(suggestionVariant/ranked.length)%3;
+ [ordered[rotation],ordered[(rotation+1)%3],ordered[(rotation+2)%3]].forEach((pick,i)=>{
    meals.push({name:['朝食','昼食','夕食'][i],...pick});
    pick.items.forEach(p=>used.set(p.id,(used.get(p.id)||0)+1));
-  });
- }
+ });
  const repeats=[...used.values()].reduce((n,c)=>n+Math.max(0,c-1),0);
  if(meals.length!==3){$('result').innerHTML='<div class="warning">予算内で3食を組めませんでした。予算を調整してください。</div>';return;}
  const total=meals.reduce((a,m)=>a+m.price,0);

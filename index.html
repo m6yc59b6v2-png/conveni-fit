@@ -134,7 +134,8 @@ function suggest(){
  const cheapestOptions=viable.slice().sort((a,b)=>a.price-b.price).slice(0,55);
  const diversified=viable.slice().sort((a,b)=>((a.items.map(x=>x.id).join('|').split('').reduce((n,c)=>n*31+c.charCodeAt(0),7)+suggestionVariant*97)>>>0)-((b.items.map(x=>x.id).join('|').split('').reduce((n,c)=>n*31+c.charCodeAt(0),7)+suggestionVariant*97)>>>0)).slice(0,35);
  const candidates=[...new Map([...bestGoal,...cheapestOptions,...diversified].map(m=>[m.items.map(p=>p.id).join('|'),m])).values()].slice(0,120);
- const ranked=[];
+ const ranked=[],rankedKeys=new Set();
+ // Bounded best-first shortlist; avoid sorting on every one of hundreds of thousands of combinations.
  for(let i=0;i<candidates.length;i++)for(let j=i;j<candidates.length;j++)for(let k=j;k<candidates.length;k++){
    const picks=[candidates[i],candidates[j],candidates[k]],sum=picks.reduce((n,m)=>n+m.price,0);
    if(sum>budget)continue;
@@ -143,13 +144,12 @@ function suggest(){
    const sameMeal=(i===j?1:0)+(j===k?1:0)+(i===k?1:0);
    const desirability=picks.reduce((n,m)=>n+score(m),0);
    const value=repeats*100000+sameMeal*10000+desirability;
-   // Meal order doesn't define uniqueness; products and quantities do.
+   if(ranked.length===30&&value>=ranked[ranked.length-1].value)continue;
    const signature=[...counts.entries()].sort(([a],[b])=>a.localeCompare(b)).map(([id,n])=>id+':'+n).join('|');
-   if(!ranked.some(x=>x.signature===signature)){
-     ranked.push({value,picks,signature});
-     ranked.sort((a,b)=>a.value-b.value);
-     if(ranked.length>30)ranked.pop();
-   }
+   if(rankedKeys.has(signature))continue;
+   ranked.push({value,picks,signature});rankedKeys.add(signature);
+   ranked.sort((a,b)=>a.value-b.value);
+   if(ranked.length>30){const removed=ranked.pop();rankedKeys.delete(removed.signature);}
  }
  if(!ranked.length){
    $('result').innerHTML='<div class="warning">この条件では3食を組めませんでした。予算や除外条件を調整してください。</div>';return;

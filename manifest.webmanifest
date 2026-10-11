@@ -1,0 +1,20 @@
+{
+  "id": "./",
+  "name": "Conveni Fit｜コンビニで賢く食べる",
+  "short_name": "Conveni Fit",
+  "description": "コンビニでの食事選び・献立提案・食事と体重の記録をサポート",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5faf7",
+  "theme_color": "#176d4b",
+  "lang": "ja",
+  "icons": [
+    {
+      "src": "./icons/conveni-fit.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

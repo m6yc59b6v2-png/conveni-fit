@@ -116,7 +116,10 @@ function suggestOne(){
  if(!options.length){$('result').innerHTML='<div class="warning"><strong>条件に合う1食が見つかりませんでした。</strong><p>予算を増やすか、コンビニ・除外条件を変更してください。現在は公式情報を確認した商品だけを使っています。</p></div>';return;}
  const score=m=>goal==='muscle'?-(m.protein*7+m.kcal*.15):goal==='diet'?m.kcal-m.protein*5:Math.abs(m.price-budget*.85)-m.protein*2;
  options.sort((a,b)=>score(a)-score(b)||b.items.length-a.items.length||a.price-b.price);
- const candidates=options.slice(0,Math.min(options.length,25));
+ // Prefer a balanced 3-item meal when affordable; avoid selecting only a small snack for a full meal.
+ const three=options.filter(m=>m.items.length===3);
+ const ranked=three.length?three:options;
+ const candidates=ranked.slice(0,Math.min(ranked.length,25));
  const selected=candidates[suggestionVariant%candidates.length];
  const items=selected.items,macro=Math.round(selected.kcal)+'kcal ／ P '+selected.protein.toFixed(1)+'g';
  $('result').innerHTML='<p class="warning">確認済み商品の組み合わせ例です。必要な栄養量を満たす保証はありません。アレルゲン・価格・在庫は必ず店頭表示をご確認ください。</p>'+

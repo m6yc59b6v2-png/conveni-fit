@@ -474,7 +474,12 @@ function renderMealPlan(){
    note:'保存した献立の予定から食事記録へ',photo:null
   });
   if(!saveDiary()){diaryRecords.splice(before);return;}
-  try{writeMealPlans(readMealPlans().filter(p=>!(p.date===plan.date&&p.meal===plan.meal)));}catch(e){alert('食事は記録されましたが、予定の削除に失敗しました。重複記録に注意してください。');return;}
+  try{writeMealPlans(readMealPlans().filter(p=>!(p.date===plan.date&&p.meal===plan.meal)));}catch(e){
+   diaryRecords.splice(before);
+   if(!saveDiary())alert('予定の削除と食事記録の復元に失敗しました。記録を確認してください。');
+   else alert('予定を削除できなかったため、食事記録を元に戻しました。');
+   return;
+  }
   $('diaryDate').value=plan.date;
   renderDiary();renderMealPlan();
  });

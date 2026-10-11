@@ -87,7 +87,7 @@ async function load(){
  const [a,b]=await Promise.all([fetch('data/products.json?ts='+Date.now(),{cache:'no-store'}),fetch('data/history.json?ts='+Date.now(),{cache:'no-store'})]);
  if(!a.ok||!b.ok)throw Error('HTTPエラー');
  db=await a.json();history=await b.json();renderCatalog();renderHistory();populateDiaryProducts();
- const active=db.products.filter(x=>x.status==='verified').length;
+ const active=db.products.filter(x=>x.status==='verified'&&Number.isFinite(x.price)&&x.price>=0&&Number.isFinite(x.kcal)&&x.kcal>=0&&Number.isFinite(x.protein)&&x.protein>=0).length;
  $('metricAll').textContent=db.products.length;
  $('metricVerified').textContent=active;
  $('status').textContent=`登録 ${db.products.length}件／献立利用可能 ${active}件。未確認の商品は自動提案に使用しません。`;
@@ -111,7 +111,7 @@ function isExcludedProduct(p,tags){if(!tags.length)return false;if(!Array.isArra
 function suggestOne(){
  const chain=$('chain').value,goal=$('goal').value,budget=Number($('budget').value),excluded=selectedExclusions(),mealTime=$('mealTime').value;
  if(!Number.isFinite(budget)||budget<100){$('result').textContent='1食の予算を100円以上に設定してください。';return;}
- const pool=db.products.filter(p=>p.status==='verified'&&p.price!=null&&p.kcal!=null&&p.protein!=null&&(chain==='any'||p.chain===chain)&&!isExcludedProduct(p,excluded));
+ const pool=db.products.filter(p=>p.status==='verified'&&Number.isFinite(p.price)&&p.price>=0&&Number.isFinite(p.kcal)&&p.kcal>=0&&Number.isFinite(p.protein)&&p.protein>=0&&(chain==='any'||p.chain===chain)&&!isExcludedProduct(p,excluded));
  const staple=pool.filter(p=>p.category==='staple'),protein=pool.filter(p=>p.category==='protein'),vegetable=pool.filter(p=>p.category==='vegetable');
  const options=[];
  // 3品セットを優先し、低予算では主食＋たんぱく質源の2品セットも提案。
@@ -166,7 +166,7 @@ function suggest(){
 
  const chain=$('chain').value,goal=$('goal').value,budget=Number($('budget').value),excluded=selectedExclusions();
  if(!Number.isFinite(budget)||budget<300){$('result').textContent='予算を300円以上に設定してください。';return;}
- const pool=db.products.filter(p=>p.status==='verified'&&p.price!=null&&p.kcal!=null&&p.protein!=null&&(chain==='any'||p.chain===chain)&&!isExcludedProduct(p,excluded));
+ const pool=db.products.filter(p=>p.status==='verified'&&Number.isFinite(p.price)&&p.price>=0&&Number.isFinite(p.kcal)&&p.kcal>=0&&Number.isFinite(p.protein)&&p.protein>=0&&(chain==='any'||p.chain===chain)&&!isExcludedProduct(p,excluded));
  const cat=c=>pool.filter(p=>p.category===c).sort((a,b)=>goal==='muscle'?b.protein-a.protein:a.price-b.price);
  const staple=cat('staple'),prot=cat('protein'),veg=cat('vegetable');
  if(!staple.length||!prot.length||!veg.length){

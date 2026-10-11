@@ -1,0 +1,27 @@
+name: Meal planner smoke tests
+
+on:
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'data/products.json'
+      - 'tests/**'
+      - '.github/workflows/meal-tests.yml'
+  push:
+    branches:
+      - 'feature/family-meal-variety-20261011'
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check meal combinations and budgets
+        run: node tests/meal-smoke.test.cjs

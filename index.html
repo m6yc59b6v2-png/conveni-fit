@@ -59,7 +59,7 @@ header .muted{letter-spacing:.055em;font-size:12px}
 <div><label for="chain">コンビニ</label><select id="chain"><option value="seven">セブン‐イレブン</option><option value="family">ファミリーマート</option><option value="lawson" selected>ローソン</option><option value="any">3社から選ぶ</option></select></div>
 <div><label for="goal">目標</label><select id="goal"><option value="balance">食生活を整える</option><option value="diet">減量・体脂肪管理</option><option value="muscle">筋肉づくり・増量</option></select></div>
 <div><label for="budget">1日予算（円）</label><input id="budget" type="number" min="300" max="10000" step="100" value="1800"></div>
-<div><label for="exclude">除外する食材</label><select id="exclude"><option value="">なし</option><option value="卵">卵</option><option value="鶏肉">鶏肉</option></select></div>
+<div><label for="exclude">苦手な食材・避けたいもの（複数選択可）</label><div id="exclude" class="exclude-options" role="group" aria-label="避けたい食材"><label><input type="checkbox" value="卵">卵</label><label><input type="checkbox" value="鶏肉">鶏肉</label><label><input type="checkbox" value="豚肉">豚肉</label><label><input type="checkbox" value="さけ">鮭</label><label><input type="checkbox" value="大豆">大豆</label><label><input type="checkbox" value="乳">乳製品</label><label><input type="checkbox" value="小麦">小麦</label><label><input type="checkbox" value="ごま">ごま</label><label><input type="checkbox" value="りんご">りんご</label></div><p class="muted">商品データに登録された原材料・アレルゲン情報に基づく除外です。アレルギー対応を保証するものではありません。購入前に必ず商品ラベルをご確認ください。</p></div>
 </div><div class="actions"><button id="suggest">献立を提案する</button><button class="secondary" id="refresh">商品データを再読込</button></div><p class="muted" id="status" aria-live="polite">商品データを読み込んでいます…</p></section>
 <section class="card"><h2>今日の献立候補</h2><div id="result" class="empty">条件を選んで「献立を提案する」を押してね。</div></section>
 <section class="card" id="profile"><div class="row"><h2>あなたの体格と目標</h2><span class="pill">自分専用の設定</span></div><p class="muted">身長と体重からBMIを確認して、目標体重を設定できます。入力した情報はこの端末内だけに保存されます。</p><div class="grid"><div><label for="profileHeight">身長（cm）</label><input id="profileHeight" type="number" min="100" max="250" step="0.1" inputmode="decimal" placeholder="例：160"></div><div><label for="profileWeight">現在の体重（kg）</label><input id="profileWeight" type="number" min="20" max="400" step="0.1" inputmode="decimal" placeholder="例：55"></div><div><label for="profileGoal">目標体重（kg）</label><input id="profileGoal" type="number" min="20" max="400" step="0.1" inputmode="decimal" placeholder="例：52"></div></div><div class="actions"><button type="button" id="profileSave">目標を保存・BMIを計算</button><button type="button" class="secondary" id="profileReset">設定を削除</button></div><p id="profileMessage" class="muted" aria-live="polite"></p><div id="profileResult" class="profile-panel hidden"></div><p class="profile-hint">※BMIは成人向けの一般的な体格指標です。筋肉量、年齢、妊娠中などの状態を反映せず、健康状態の診断ではありません。目標体重は自由に変更できます。</p></section>
@@ -102,9 +102,9 @@ function renderHistory(){
  $('history').innerHTML=history.length?history.slice().reverse().slice(0,25).map(h=>`<p>・${escapeHtml(h.at)}：${escapeHtml(h.message)}</p>`).join(''):'まだ更新履歴はありません。';
 }
 function suggest(){
- const chain=$('chain').value,goal=$('goal').value,budget=Number($('budget').value),ex=$('exclude').value;
+ const chain=$('chain').value,goal=$('goal').value,budget=Number($('budget').value),excluded=[...document.querySelectorAll('#exclude input:checked')].map(x=>x.value);
  if(!Number.isFinite(budget)||budget<300){$('result').textContent='予算を300円以上に設定してください。';return;}
- const pool=db.products.filter(p=>p.status==='verified'&&p.price!=null&&p.kcal!=null&&p.protein!=null&&(chain==='any'||p.chain===chain)&&(!ex||!p.allergens.includes(ex)));
+ const pool=db.products.filter(p=>p.status==='verified'&&p.price!=null&&p.kcal!=null&&p.protein!=null&&(chain==='any'||p.chain===chain)&&!excluded.some(tag=>(p.allergens||[]).some(a=>a===tag||(tag==='乳'&&a==='乳成分'))));
  const cat=c=>pool.filter(p=>p.category===c).sort((a,b)=>goal==='muscle'?b.protein-a.protein:a.price-b.price);
  const staple=cat('staple'),prot=cat('protein'),veg=cat('vegetable');
  if(!staple.length||!prot.length||!veg.length){
@@ -122,39 +122,46 @@ function suggest(){
  }
  const score=m=>goal==='muscle'?-(m.protein*7+m.kcal*.15):goal==='diet'?(m.kcal-m.protein*5):Math.abs(m.price-budget/3);
  options.sort((a,b)=>score(a)-score(b));
- const affordable=options.filter(m=>m.price<=budget/3);
- if(!affordable.length){
-   const cheapest=options.reduce((a,b)=>a.price<=b.price?a:b);
-   $('result').innerHTML=`<div class="warning"><strong>現在の予算では3食を組めません。</strong><p>最も安い組み合わせでも1食${yen(cheapest.price)}、3食で${yen(cheapest.price*3)}が必要です。予算を増やすか、条件を変更してください。</p></div>`;
+ const cheapest=options.reduce((a,b)=>a.price<=b.price?a:b);
+ if(cheapest.price*3>budget){
+   $('result').innerHTML=`<div class="warning"><strong>現在の予算では3食を組めません。</strong><p>現行の「主食＋たんぱく質源＋野菜」構成では、最も安い1食が${yen(cheapest.price)}、3食で${yen(cheapest.price*3)}必要です。商品追加や構成の改善を進めています。</p></div>`;
    return;
  }
-
- const meals=[],used=new Map(),minimumPrice=Math.min(...options.map(x=>x.price));
- // Optimise the whole day instead of greedily choosing breakfast first.
- const candidateMeals=options.filter(m=>m.price<=budget-2*minimumPrice);
- const shortlist=candidateMeals.slice().sort((a,b)=>score(a)-score(b)).slice(0,110);
- const cheap=options.slice().sort((a,b)=>a.price-b.price).slice(0,60);
- const candidates=[...new Map([...shortlist,...cheap].map(m=>[m.items.map(p=>p.id).join('|'),m])).values()].slice(0,110);
- let best=null;
+ const meals=[],used=new Map(),minimumPrice=cheapest.price;
+ // Keep inexpensive options as well as goal-oriented options; don't assume each meal costs budget/3.
+ const viable=options.filter(m=>m.price<=budget-2*minimumPrice);
+ const bestGoal=viable.slice().sort((a,b)=>score(a)-score(b)).slice(0,55);
+ const cheapestOptions=viable.slice().sort((a,b)=>a.price-b.price).slice(0,55);
+ const diversified=viable.slice().sort((a,b)=>((a.items.map(x=>x.id).join('|').split('').reduce((n,c)=>n*31+c.charCodeAt(0),7)+suggestionVariant*97)>>>0)-((b.items.map(x=>x.id).join('|').split('').reduce((n,c)=>n*31+c.charCodeAt(0),7)+suggestionVariant*97)>>>0)).slice(0,35);
+ const candidates=[...new Map([...bestGoal,...cheapestOptions,...diversified].map(m=>[m.items.map(p=>p.id).join('|'),m])).values()].slice(0,120);
+ const ranked=[],rankedKeys=new Set();
+ // Bounded best-first shortlist; avoid sorting on every one of hundreds of thousands of combinations.
  for(let i=0;i<candidates.length;i++)for(let j=i;j<candidates.length;j++)for(let k=j;k<candidates.length;k++){
-  const picks=[candidates[i],candidates[j],candidates[k]],sum=picks.reduce((n,m)=>n+m.price,0);
-  if(sum>budget)continue;
-  const counts=new Map();for(const m of picks)for(const p of m.items)counts.set(p.id,(counts.get(p.id)||0)+1);
-  const repeats=[...counts.values()].reduce((n,c)=>n+Math.max(0,c-1),0);
-  const sameMeal=(i===j?1:0)+(j===k?1:0)+(i===k?1:0);
-  const desirability=picks.reduce((n,m)=>n+score(m),0);
-  const tie=((i*17+j*37+k*53+suggestionVariant*101)%29)*.08;
-  const value=repeats*100000+sameMeal*10000+desirability+tie;
-  if(!best||value<best.value)best={value,picks};
+   const picks=[candidates[i],candidates[j],candidates[k]],sum=picks.reduce((n,m)=>n+m.price,0);
+   if(sum>budget)continue;
+   const counts=new Map();for(const m of picks)for(const p of m.items)counts.set(p.id,(counts.get(p.id)||0)+1);
+   const repeats=[...counts.values()].reduce((n,c)=>n+Math.max(0,c-1),0);
+   const sameMeal=(i===j?1:0)+(j===k?1:0)+(i===k?1:0);
+   const desirability=picks.reduce((n,m)=>n+score(m),0);
+   const value=repeats*100000+sameMeal*10000+desirability;
+   if(ranked.length===30&&value>=ranked[ranked.length-1].value)continue;
+   const signature=[...counts.entries()].sort(([a],[b])=>a.localeCompare(b)).map(([id,n])=>id+':'+n).join('|');
+   if(rankedKeys.has(signature))continue;
+   ranked.push({value,picks,signature});rankedKeys.add(signature);
+   ranked.sort((a,b)=>a.value-b.value);
+   if(ranked.length>30){const removed=ranked.pop();rankedKeys.delete(removed.signature);}
  }
- if(best){
-  const ordered=best.picks.slice().sort((a,b)=>a.kcal-b.kcal);
-  const rotation=suggestionVariant%3;
-  [ordered[rotation],ordered[(rotation+1)%3],ordered[(rotation+2)%3]].forEach((pick,i)=>{
+ if(!ranked.length){
+   $('result').innerHTML='<div class="warning">この条件では3食を組めませんでした。予算や除外条件を調整してください。</div>';return;
+ }
+ // Cycle through genuinely different baskets, rather than only rotating breakfast/lunch/dinner.
+ const selected=ranked[suggestionVariant%ranked.length];
+ const ordered=selected.picks.slice().sort((a,b)=>a.kcal-b.kcal);
+ const rotation=Math.floor(suggestionVariant/ranked.length)%3;
+ [ordered[rotation],ordered[(rotation+1)%3],ordered[(rotation+2)%3]].forEach((pick,i)=>{
    meals.push({name:['朝食','昼食','夕食'][i],...pick});
    pick.items.forEach(p=>used.set(p.id,(used.get(p.id)||0)+1));
-  });
- }
+ });
  const repeats=[...used.values()].reduce((n,c)=>n+Math.max(0,c-1),0);
  if(meals.length!==3){$('result').innerHTML='<div class="warning">予算内で3食を組めませんでした。予算を調整してください。</div>';return;}
  const total=meals.reduce((a,m)=>a+m.price,0);

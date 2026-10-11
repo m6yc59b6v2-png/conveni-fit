@@ -457,7 +457,7 @@ function renderMealPlan(){
  const el=$('savedMealPlan');if(!el)return;
  const plans=readMealPlans().sort((a,b)=>a.date.localeCompare(b.date)||['朝食','昼食','夕食','間食'].indexOf(a.meal)-['朝食','昼食','夕食','間食'].indexOf(b.meal));
  if(!plans.length){el.innerHTML='<p class="muted">保存した献立の予定はありません。</p>';return;}
- el.innerHTML='<h3>食べる予定の献立</h3>'+plans.map((plan,i)=>'<div class="meal"><p><strong>'+escapeHtml(plan.date)+'・'+escapeHtml(plan.meal)+'</strong>（予定・未摂取）</p><ul>'+plan.items.map(x=>'<li>'+escapeHtml(x.name)+'</li>').join('')+'</ul><div class="actions"><button type="button" data-confirm-plan="'+i+'">食べたので記録する</button><button type="button" class="secondary" data-clear-plan="'+i+'">予定を削除</button></div></div>').join('');
+ el.innerHTML='<h3>食べる予定の献立（'+plans.length+'食）</h3><p class="muted">食べたものとして記録するまで摂取カロリーには含まれません。</p>'+plans.map((plan,i)=>'<div class="meal"><p><strong>'+escapeHtml(plan.date)+'・'+escapeHtml(plan.meal)+'</strong>（予定・未摂取）</p><ul>'+plan.items.map(x=>'<li>'+escapeHtml(x.name)+'</li>').join('')+'</ul><div class="actions"><button type="button" data-confirm-plan="'+i+'">食べたので記録する</button><button type="button" class="secondary" data-clear-plan="'+i+'">予定を削除</button></div></div>').join('');
  el.querySelectorAll('[data-clear-plan]').forEach(btn=>btn.onclick=()=>{
   const current=readMealPlans();
   const selected=plans[Number(btn.dataset.clearPlan)];

@@ -155,6 +155,8 @@ function suggest(){
    pick.items.forEach(p=>used.set(p.id,(used.get(p.id)||0)+1));
   });
  }
+ const shoppingItems=[...used.entries()].map(([id,quantity])=>({product:db.products.find(p=>p.id===id),quantity})).filter(x=>x.product);
+ const shoppingHtml='<details class="meal" open><summary><strong>🛒 買い物チェックリスト（1日分）</strong></summary><p class="muted">買った商品にチェックを入れてね。チェックはこの画面を開いている間だけ保持されます。</p><ul style="list-style:none;padding-left:0">'+shoppingItems.map(({product:p,quantity:q})=>'<li><label style="display:flex;gap:10px;align-items:center;padding:7px 0"><input type="checkbox" class="shopping-check" style="width:auto"> <span>'+escapeHtml(p.name)+' × '+q+'個（'+yen(p.price*q)+'）</span></label></li>').join('')+'</ul><p id="shoppingProgress" class="muted" aria-live="polite">0 / '+shoppingItems.length+'種類を購入済み</p></details>';
  const repeats=[...used.values()].reduce((n,c)=>n+Math.max(0,c-1),0);
  if(meals.length!==3){$('result').innerHTML='<div class="warning">予算内で3食を組めませんでした。予算を調整してください。</div>';return;}
  const total=meals.reduce((a,m)=>a+m.price,0);
@@ -163,12 +165,23 @@ function suggest(){
  const macro=m=>`${Math.round(m.kcal)}kcal ／ P ${m.protein.toFixed(1)}g ／ F ${m.fat==null?'未確認':m.fat.toFixed(1)+'g'} ／ C ${m.carbs==null?'未確認':m.carbs.toFixed(1)+'g'}`;
  $('result').innerHTML=`<p class="warning">確認済み商品を使った買い物候補です。栄養バランスや必要エネルギーを満たす保証はありません。野菜のドレッシング等は別売の場合があります。地域・店頭表示とアレルゲン情報を必ず確認してください。</p>`+
  (repeats?`<p class="result-note">※現在の商品数・予算・除外条件では、${repeats}件の商品が別の食事にも登場します。商品が増えると重複を減らせます。</p>`:'<p class="result-note">✨ 同じ商品が重ならない組み合わせを優先しました。</p>')+
+ shoppingHtml+
  meals.map(m=>`<div class="meal"><h3>${m.name}</h3><ul>${m.items.map(p=>`<li>${escapeHtml(p.name)}（${names[p.chain]}）</li>`).join('')}</ul><div class="totals">${yen(m.price)} ／ ${macro(m)}</div></div>`).join('')+
  `<div class="stat"><strong>1日合計 ${yen(total)} ／ ${Math.round(kcalTotal)}kcal ／ P ${proteinTotal.toFixed(1)}g</strong><p class="small">予算残り ${yen(budget-total)}。1日分の必要栄養量を満たすことを意味しません。</p></div><div class="actions"><button id="copy">買い物メモをコピー</button><button class="secondary" id="another">もう一度提案</button></div>`;
  $('copy').onclick=()=>{const memo=meals.map(m=>m.name+': '+m.items.map(p=>p.name).join('、')).join('\\n')+'\\n合計 '+yen(total);if(navigator.clipboard?.writeText){navigator.clipboard.writeText(memo).then(()=>alert('コピーしました')).catch(()=>prompt('こちらをコピーしてください',memo));}else prompt('こちらをコピーしてください',memo);};
+
  $('another').onclick=()=>{suggestionVariant++;suggest();};
 }
 
+
+// Delegate once: repeated meal suggestions must not accumulate listeners.
+$('result').addEventListener('change',e=>{
+ if(!e.target.matches('.shopping-check'))return;
+ const checks=[...$('result').querySelectorAll('.shopping-check')];
+ const done=checks.filter(x=>x.checked).length;
+ const progress=$('shoppingProgress');
+ if(progress)progress.textContent=done+' / '+checks.length+'種類を購入済み';
+});
 
 const PROFILE_KEY='conveni-fit-profile-v1';
 function bmiCategory(b){return b<18.5?'低体重':b<25?'普通体重':b<30?'肥満（1度）':b<35?'肥満（2度）':b<40?'肥満（3度）':'肥満（4度）';}

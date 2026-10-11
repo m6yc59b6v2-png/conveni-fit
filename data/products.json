@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-09T18:35:40+00:00",
+  "updated_at": "2026-10-11T20:11:00+09:00",
   "products": [
     {
       "id": "seven-chicken",
@@ -2818,6 +2818,63 @@
       "source_evidence": "https://www.family.co.jp/goods/newgoods.html",
       "reviewed_by": null,
       "region_note": "2026年10月6日週のファミリーマート公式新商品一覧。栄養成分・アレルゲン未確認のため献立提案対象外。"
+    },
+    {
+      "id": "seven-tofu-bar-dashi-2026",
+      "chain": "seven",
+      "name": "７Ｐたんぱく質１０ｇの豆腐バー和風だし",
+      "category": "protein",
+      "price": 159.84,
+      "kcal": 104,
+      "protein": 11.3,
+      "fat": 6.2,
+      "carbs": 1,
+      "source_url": "https://www.sej.co.jp/products/a/item/250621",
+      "verified_at": "2026-10-11",
+      "status": "verified",
+      "allergens": [
+        "大豆"
+      ],
+      "source_evidence": "https://www.sej.co.jp/products/a/item/250621",
+      "reviewed_by": "official-source-check"
+    },
+    {
+      "id": "seven-tofu-bar-root-2026",
+      "chain": "seven",
+      "name": "７Ｐ枝豆と根菜の豆腐バー",
+      "category": "protein",
+      "price": 192.24,
+      "kcal": 162,
+      "protein": 10.3,
+      "fat": 10.7,
+      "carbs": 6.8,
+      "source_url": "https://www.sej.co.jp/products/a/item/250706/",
+      "verified_at": "2026-10-11",
+      "status": "verified",
+      "allergens": [
+        "大豆"
+      ],
+      "source_evidence": "https://www.sej.co.jp/products/a/item/250706/",
+      "reviewed_by": "official-source-check"
+    },
+    {
+      "id": "seven-tofu-bar-hijiki-2026",
+      "chain": "seven",
+      "name": "７Ｐ味しみひじきと枝豆の豆腐バー",
+      "category": "protein",
+      "price": 192.24,
+      "kcal": 165,
+      "protein": 10.9,
+      "fat": 10.6,
+      "carbs": 7.3,
+      "source_url": "https://www.sej.co.jp/products/a/item/250228/",
+      "verified_at": "2026-10-11",
+      "status": "verified",
+      "allergens": [
+        "大豆"
+      ],
+      "source_evidence": "https://www.sej.co.jp/products/a/item/250228/",
+      "reviewed_by": "official-source-check"
     }
   ]
 }

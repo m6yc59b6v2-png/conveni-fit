@@ -58,7 +58,7 @@ header .muted{letter-spacing:.055em;font-size:12px}
 <section class="hero"><div class="hero-copy"><span class="hero-eyebrow">YOUR DAILY WELLNESS</span><h2>コンビニで、<br>心と体にやさしい選択を。</h2><p>毎日の食事をもっとかんたんに、もっと健康に。<br>公式情報を確認した商品から、あなたに合う組み合わせを。</p></div><div class="metrics"><div class="metric"><strong id="metricAll">—</strong><span>登録商品</span></div><div class="metric"><strong id="metricVerified">—</strong><span>確認済み</span></div><div class="metric"><strong>3社</strong><span>対象コンビニ</span></div></div></section><section class="card"><h2>あなたに合った組み合わせを探す</h2><div class="grid">
 <div><label for="chain">コンビニ</label><select id="chain"><option value="seven">セブン‐イレブン</option><option value="family">ファミリーマート</option><option value="lawson" selected>ローソン</option><option value="any">3社から選ぶ</option></select></div>
 <div><label for="goal">目標</label><select id="goal"><option value="balance">食生活を整える</option><option value="diet">減量・体脂肪管理</option><option value="muscle">筋肉づくり・増量</option></select></div>
-<div><label for="budget">1日予算（円）</label><input id="budget" type="number" min="300" max="10000" step="100" value="1800"></div>
+<div><label for="mealMode">提案する食事</label><select id="mealMode"><option value="day">1日3食</option><option value="single">1食だけ</option></select></div><div><label for="mealTime">食事の時間</label><select id="mealTime" disabled><option value="昼食">昼食</option><option value="朝食">朝食</option><option value="夕食">夕食</option></select></div><div><label for="budget" id="budgetLabel">1日予算（円）</label><input id="budget" type="number" min="100" max="10000" step="100" value="1800"></div>
 <div><label for="exclude">除外する食材</label><select id="exclude"><option value="">なし</option><option value="卵">卵</option><option value="鶏肉">鶏肉</option></select></div>
 </div><div class="actions"><button id="suggest">献立を提案する</button><button class="secondary" id="refresh">商品データを再読込</button></div><p class="muted" id="status" aria-live="polite">商品データを読み込んでいます…</p></section>
 <section class="card"><h2>今日の献立候補</h2><div id="result" class="empty">条件を選んで「献立を提案する」を押してね。</div></section>
@@ -101,7 +101,61 @@ $('catalogStatus').addEventListener('change',e=>{catalogOnlyVerified=e.target.va
 function renderHistory(){
  $('history').innerHTML=history.length?history.slice().reverse().slice(0,25).map(h=>`<p>・${escapeHtml(h.at)}：${escapeHtml(h.message)}</p>`).join(''):'まだ更新履歴はありません。';
 }
+function suggestOne(){
+ const chain=$('chain').value,goal=$('goal').value,budget=Number($('budget').value),ex=$('exclude').value,mealTime=$('mealTime').value;
+ if(!Number.isFinite(budget)||budget<100){$('result').textContent='1食の予算を100円以上に設定してください。';return;}
+ const pool=db.products.filter(p=>p.status==='verified'&&p.price!=null&&p.kcal!=null&&p.protein!=null&&(chain==='any'||p.chain===chain)&&(!ex||!(p.allergens||[]).includes(ex)));
+ const staple=pool.filter(p=>p.category==='staple'),protein=pool.filter(p=>p.category==='protein'),vegetable=pool.filter(p=>p.category==='vegetable');
+ const options=[];
+ // 3品セットを優先し、低予算では主食＋たんぱく質源など2品セットも提案。
+ for(const s of staple)for(const p of protein){
+  const pairs=[[s,p],...vegetable.map(v=>[s,p,v])];
+  for(const items of pairs){const price=items.reduce((n,x)=>n+x.price,0);if(price<=budget)options.push({items,price,kcal:items.reduce((n,x)=>n+x.kcal,0),protein:items.reduce((n,x)=>n+x.protein,0)});}
+ }
+ for(const s of staple)for(const v of vegetable){const items=[s,v],price=s.price+v.price;if(price<=budget)options.push({items,price,kcal:s.kcal+v.kcal,protein:s.protein+v.protein});}
+ if(!options.length){$('result').innerHTML='<div class="warning"><strong>条件に合う1食が見つかりませんでした。</strong><p>予算を増やすか、コンビニ・除外条件を変更してください。現在は公式情報を確認した商品だけを使っています。</p></div>';return;}
+ const score=m=>goal==='muscle'?-(m.protein*7+m.kcal*.15):goal==='diet'?m.kcal-m.protein*5:Math.abs(m.price-budget*.85)-m.protein*2;
+ options.sort((a,b)=>score(a)-score(b)||b.items.length-a.items.length||a.price-b.price);
+ // Prefer a balanced 3-item meal when affordable; avoid selecting only a small snack for a full meal.
+ const three=options.filter(m=>m.items.length===3);
+ const ranked=three.length?three:options;
+ const candidates=ranked.slice(0,Math.min(ranked.length,25));
+ const selected=candidates[suggestionVariant%candidates.length];
+ const items=selected.items,macro=Math.round(selected.kcal)+'kcal ／ P '+selected.protein.toFixed(1)+'g';
+ $('result').innerHTML='<p class="warning">確認済み商品の組み合わせ例です。必要な栄養量を満たす保証はありません。アレルゲン・価格・在庫は必ず店頭表示をご確認ください。</p>'+
+ '<div class="meal"><h3>'+escapeHtml(mealTime)+'のおすすめ</h3><ul>'+items.map(p=>'<li>'+escapeHtml(p.name)+'（'+names[p.chain]+'）</li>').join('')+'</ul><div class="totals">'+yen(selected.price)+' ／ '+macro+'</div></div>'+
+ '<div class="stat"><strong>合計 '+yen(selected.price)+'</strong><p class="small">予算残り '+yen(budget-selected.price)+'。'+(items.length===2?'2品の組み合わせです。必要に応じて野菜なども追加してください。':'')+'</p></div>'+
+ '<div class="actions"><button id="copy">買い物メモをコピー</button><button id="planSuggestedMeal" class="secondary">食べる予定に保存</button><button id="saveSuggestedMeal" class="secondary">食べたものとして記録</button><button class="secondary" id="another">もう一度提案</button></div>';
+ $('copy').onclick=()=>{const memo=mealTime+': '+items.map(p=>p.name).join('、')+'\n合計 '+yen(selected.price);if(navigator.clipboard?.writeText)navigator.clipboard.writeText(memo).then(()=>alert('コピーしました')).catch(()=>prompt('こちらをコピーしてください',memo));else prompt('こちらをコピーしてください',memo);};
+ $('planSuggestedMeal').onclick=()=>{
+  const plan={date:localDate(),meal:mealTime,items:items.map(p=>({id:p.id,name:p.name,kcal:p.kcal,protein:p.protein})),price:selected.price};
+  try{localStorage.setItem('conveni-fit-meal-plan-v1',JSON.stringify(plan));}
+  catch(e){alert('予定を保存できませんでした。ブラウザの保存設定を確認してください。');return;}
+  $('planSuggestedMeal').disabled=true;
+  $('planSuggestedMeal').textContent='予定に保存しました';
+  renderMealPlan();
+ };
+ $('saveSuggestedMeal').onclick=()=>{
+  const previousLength=diaryRecords.length;
+  const date=localDate();
+  for(const item of items)diaryRecords.push({
+   id:Date.now().toString(36)+'-'+Math.random().toString(36).slice(2),
+   date,meal:mealTime,name:item.name,kcal:item.kcal,protein:item.protein,
+   note:'献立提案から追加（食べた場合の記録）',photo:null
+  });
+  if(!saveDiary()){diaryRecords.splice(previousLength);return;}
+  $('diaryDate').value=date;renderDiary();
+  $('saveSuggestedMeal').disabled=true;
+  $('saveSuggestedMeal').textContent='食事記録に保存しました';
+ };
+ $('another').onclick=()=>{suggestionVariant++;suggest();};
+}
+$('mealMode').addEventListener('change',()=>{
+ const single=$('mealMode').value==='single';$('mealTime').disabled=!single;$('budgetLabel').textContent=single?'1食予算（円）':'1日予算（円）';$('budget').value=single?'500':'1800';suggestionVariant=0;
+});
 function suggest(){
+ if($('mealMode').value==='single'){suggestOne();return;}
+
  const chain=$('chain').value,goal=$('goal').value,budget=Number($('budget').value),ex=$('exclude').value;
  if(!Number.isFinite(budget)||budget<300){$('result').textContent='予算を300円以上に設定してください。';return;}
  const pool=db.products.filter(p=>p.status==='verified'&&p.price!=null&&p.kcal!=null&&p.protein!=null&&(chain==='any'||p.chain===chain)&&(!ex||!p.allergens.includes(ex)));
@@ -369,6 +423,29 @@ function saveDiary(){
  try{localStorage.setItem(DIARY_KEY,JSON.stringify(diaryRecords));return true;}
  catch(e){$('diaryMessage').textContent='保存できませんでした。ブラウザの空き容量や設定を確認してください。';return false;}
 }
+const MEAL_PLAN_KEY='conveni-fit-meal-plan-v1';
+function renderMealPlan(){
+ const el=$('savedMealPlan');if(!el)return;
+ let plan=null;
+ try{plan=JSON.parse(localStorage.getItem(MEAL_PLAN_KEY)||'null');}catch(e){}
+ if(!plan||!Array.isArray(plan.items)||!plan.items.length){el.innerHTML='<p class="muted">保存した献立の予定はありません。</p>';return;}
+ el.innerHTML='<p><strong>'+escapeHtml(plan.date)+'・'+escapeHtml(plan.meal)+'</strong>（予定・未摂取）</p><ul>'+plan.items.map(x=>'<li>'+escapeHtml(x.name)+'</li>').join('')+'</ul><div class="actions"><button type="button" id="confirmMealPlan">食べたので記録する</button><button type="button" class="secondary" id="clearMealPlan">予定を削除</button></div>';
+ $('clearMealPlan').onclick=()=>{localStorage.removeItem(MEAL_PLAN_KEY);renderMealPlan();};
+ $('confirmMealPlan').onclick=()=>{
+  const before=diaryRecords.length;
+  for(const item of plan.items)diaryRecords.push({
+   id:Date.now().toString(36)+'-'+Math.random().toString(36).slice(2),
+   date:plan.date,meal:plan.meal,name:item.name,kcal:item.kcal,protein:item.protein,
+   note:'保存した献立の予定から食事記録へ',photo:null
+  });
+  if(!saveDiary()){diaryRecords.splice(before);return;}
+  localStorage.removeItem(MEAL_PLAN_KEY);
+  $('diaryDate').value=plan.date;
+  renderDiary();renderMealPlan();
+ };
+}
+$('diaryEntries').insertAdjacentHTML('beforebegin','<section id="savedMealPlan" aria-label="保存した献立の予定"></section>');
+renderMealPlan();
 function renderDiary(){
  const date=$('diaryDate').value,entries=diaryRecords.filter(x=>x.date===date);
  $('diaryCount').textContent=entries.length;

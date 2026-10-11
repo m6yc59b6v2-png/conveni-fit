@@ -30,6 +30,10 @@ for(const chain of ['family','seven','lawson']){
    const first=text;
    context.next();
    assert(elements.result.innerHTML,'next suggestion works');
+   const nextText=elements.result.innerHTML;
+   const nextTotal=nextText.match(/1日合計 ([\\d,]+)円/);
+   assert(nextTotal,'next suggestion day total present');
+   assert(Number(nextTotal[1].replaceAll(',',''))<=budget,'next suggestion stays within budget');
   }
  }
 }

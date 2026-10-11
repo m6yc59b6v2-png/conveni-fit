@@ -59,7 +59,7 @@ header .muted{letter-spacing:.055em;font-size:12px}
 <div><label for="chain">コンビニ</label><select id="chain"><option value="seven">セブン‐イレブン</option><option value="family">ファミリーマート</option><option value="lawson" selected>ローソン</option><option value="any">3社から選ぶ</option></select></div>
 <div><label for="goal">目標</label><select id="goal"><option value="balance">食生活を整える</option><option value="diet">減量・体脂肪管理</option><option value="muscle">筋肉づくり・増量</option></select></div>
 <div><label for="mealMode">提案する食事</label><select id="mealMode"><option value="day">1日3食</option><option value="single">1食だけ</option></select></div><div><label for="mealTime">食事の時間</label><select id="mealTime" disabled><option value="昼食">昼食</option><option value="朝食">朝食</option><option value="夕食">夕食</option></select></div><div><label for="budget" id="budgetLabel">1日予算（円）</label><input id="budget" type="number" min="100" max="10000" step="100" value="1800"></div>
-<div><label for="exclude">除外する食材</label><select id="exclude"><option value="">なし</option><option value="卵">卵</option><option value="鶏肉">鶏肉</option></select></div>
+<div><label for="exclude">苦手な食材・避けたいもの（複数選択可）</label><div id="exclude" class="exclude-options" role="group" aria-label="避けたい食材"><label><input type="checkbox" value="卵">卵</label><label><input type="checkbox" value="鶏肉">鶏肉</label><label><input type="checkbox" value="豚肉">豚肉</label><label><input type="checkbox" value="さけ">鮭</label><label><input type="checkbox" value="大豆">大豆</label><label><input type="checkbox" value="乳">乳製品</label><label><input type="checkbox" value="小麦">小麦</label><label><input type="checkbox" value="ごま">ごま</label><label><input type="checkbox" value="りんご">りんご</label></div><p class="muted">商品データに登録された情報に基づく除外です。アレルギー対応は保証しません。購入前に必ずラベルをご確認ください。</p></div>
 </div><div class="actions"><button id="suggest">献立を提案する</button><button class="secondary" id="refresh">商品データを再読込</button></div><p class="muted" id="status" aria-live="polite">商品データを読み込んでいます…</p></section>
 <section class="card"><h2>今日の献立候補</h2><div id="result" class="empty">条件を選んで「献立を提案する」を押してね。</div></section>
 <section class="card" id="profile"><div class="row"><h2>あなたの体格と目標</h2><span class="pill">自分専用の設定</span></div><p class="muted">身長と体重からBMIを確認して、目標体重を設定できます。入力した情報はこの端末内だけに保存されます。</p><div class="grid"><div><label for="profileHeight">身長（cm）</label><input id="profileHeight" type="number" min="100" max="250" step="0.1" inputmode="decimal" placeholder="例：160"></div><div><label for="profileWeight">現在の体重（kg）</label><input id="profileWeight" type="number" min="20" max="400" step="0.1" inputmode="decimal" placeholder="例：55"></div><div><label for="profileGoal">目標体重（kg）</label><input id="profileGoal" type="number" min="20" max="400" step="0.1" inputmode="decimal" placeholder="例：52"></div></div><div class="actions"><button type="button" id="profileSave">目標を保存・BMIを計算</button><button type="button" class="secondary" id="profileReset">設定を削除</button></div><p id="profileMessage" class="muted" aria-live="polite"></p><div id="profileResult" class="profile-panel hidden"></div><p class="profile-hint">※BMIは成人向けの一般的な体格指標です。筋肉量、年齢、妊娠中などの状態を反映せず、健康状態の診断ではありません。目標体重は自由に変更できます。</p></section>
@@ -101,10 +101,12 @@ $('catalogStatus').addEventListener('change',e=>{catalogOnlyVerified=e.target.va
 function renderHistory(){
  $('history').innerHTML=history.length?history.slice().reverse().slice(0,25).map(h=>`<p>・${escapeHtml(h.at)}：${escapeHtml(h.message)}</p>`).join(''):'まだ更新履歴はありません。';
 }
+function selectedExclusions(){return [...document.querySelectorAll('#exclude input:checked')].map(x=>x.value);}
+function isExcludedProduct(p,tags){return tags.some(tag=>(p.allergens||[]).some(a=>a===tag||(tag==='乳'&&a==='乳成分')));}
 function suggestOne(){
- const chain=$('chain').value,goal=$('goal').value,budget=Number($('budget').value),ex=$('exclude').value,mealTime=$('mealTime').value;
+ const chain=$('chain').value,goal=$('goal').value,budget=Number($('budget').value),excluded=selectedExclusions(),mealTime=$('mealTime').value;
  if(!Number.isFinite(budget)||budget<100){$('result').textContent='1食の予算を100円以上に設定してください。';return;}
- const pool=db.products.filter(p=>p.status==='verified'&&p.price!=null&&p.kcal!=null&&p.protein!=null&&(chain==='any'||p.chain===chain)&&(!ex||!(p.allergens||[]).includes(ex)));
+ const pool=db.products.filter(p=>p.status==='verified'&&p.price!=null&&p.kcal!=null&&p.protein!=null&&(chain==='any'||p.chain===chain)&&!isExcludedProduct(p,excluded));
  const staple=pool.filter(p=>p.category==='staple'),protein=pool.filter(p=>p.category==='protein'),vegetable=pool.filter(p=>p.category==='vegetable');
  const options=[];
  // 3品セットを優先し、低予算では主食＋たんぱく質源など2品セットも提案。
@@ -156,9 +158,9 @@ $('mealMode').addEventListener('change',()=>{
 function suggest(){
  if($('mealMode').value==='single'){suggestOne();return;}
 
- const chain=$('chain').value,goal=$('goal').value,budget=Number($('budget').value),ex=$('exclude').value;
+ const chain=$('chain').value,goal=$('goal').value,budget=Number($('budget').value),excluded=selectedExclusions();
  if(!Number.isFinite(budget)||budget<300){$('result').textContent='予算を300円以上に設定してください。';return;}
- const pool=db.products.filter(p=>p.status==='verified'&&p.price!=null&&p.kcal!=null&&p.protein!=null&&(chain==='any'||p.chain===chain)&&(!ex||!p.allergens.includes(ex)));
+ const pool=db.products.filter(p=>p.status==='verified'&&p.price!=null&&p.kcal!=null&&p.protein!=null&&(chain==='any'||p.chain===chain)&&!isExcludedProduct(p,excluded));
  const cat=c=>pool.filter(p=>p.category===c).sort((a,b)=>goal==='muscle'?b.protein-a.protein:a.price-b.price);
  const staple=cat('staple'),prot=cat('protein'),veg=cat('vegetable');
  if(!staple.length||!prot.length||!veg.length){

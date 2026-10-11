@@ -126,7 +126,21 @@ function suggestOne(){
  // Prefer a balanced 3-item meal when affordable; avoid selecting only a small snack for a full meal.
  const three=options.filter(m=>m.items.length===3);
  const ranked=three.length?three:options;
- const candidates=ranked.slice(0,Math.min(ranked.length,25));
+ // Keep the quality-ranked shortlist, but rotate through different main dishes first.
+ // A strict top-25 slice tended to repeat the same staple/protein pairing.
+ const shortlist=ranked.slice(0,Math.min(ranked.length,120));
+ const candidates=[];
+ const remaining=[...shortlist];
+ while(remaining.length&&candidates.length<30){
+  const recent=candidates.slice(-Math.min(candidates.length,6));
+  let best=0,bestPenalty=Infinity;
+  for(let i=0;i<remaining.length;i++){
+   const item=remaining[i];
+   const penalty=recent.reduce((sum,prior)=>sum+item.items.reduce((n,p)=>n+(prior.items.some(q=>q.id===p.id)?1:0),0),0)*100+i;
+   if(penalty<bestPenalty){bestPenalty=penalty;best=i;}
+  }
+  candidates.push(remaining.splice(best,1)[0]);
+ }
  const selected=candidates[suggestionVariant%candidates.length];
  const items=selected.items,macro=Math.round(selected.kcal)+'kcal ／ P '+selected.protein.toFixed(1)+'g';
  $('result').innerHTML='<p class="warning">確認済み商品の組み合わせ例です。必要な栄養量を満たす保証はありません。アレルゲン・価格・在庫は必ず店頭表示をご確認ください。</p>'+

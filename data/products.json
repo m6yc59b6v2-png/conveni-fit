@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-09T18:35:40+00:00",
+  "updated_at": "2026-10-11",
   "products": [
     {
       "id": "seven-chicken",
@@ -2818,6 +2818,66 @@
       "source_evidence": "https://www.family.co.jp/goods/newgoods.html",
       "reviewed_by": null,
       "region_note": "2026年10月6日週のファミリーマート公式新商品一覧。栄養成分・アレルゲン未確認のため献立提案対象外。"
+    },
+    {
+      "id": "lawson-charcoal-chicken-boneless-202610",
+      "chain": "lawson",
+      "name": "炭火焼チキン　骨なし",
+      "category": "protein",
+      "price": 259,
+      "kcal": 185,
+      "protein": 18.6,
+      "fat": 10.3,
+      "carbs": 4.7,
+      "source_url": "https://www.lawson.co.jp/recommend/original/detail/1532856_1996.html",
+      "verified_at": "2026-10-11",
+      "status": "verified",
+      "allergens": [],
+      "source_evidence": "https://www.lawson.co.jp/recommend/original/detail/1532856_1996.html",
+      "reviewed_by": "ChatGPT (official nutrition listing)",
+      "region_note": "2026年10月6日発売。公式ページで価格・PFC確認。アレルゲン未確認のため除外設定時は候補から外す。地域・店舗により取扱差あり。"
+    },
+    {
+      "id": "lawson-chicken-breast-salad-202610",
+      "chain": "lawson",
+      "name": "たんぱく質が摂れる　国産鶏むね肉のサラダ",
+      "category": "protein",
+      "price": 497,
+      "kcal": 199,
+      "protein": 23.2,
+      "fat": 10.1,
+      "carbs": 5.1,
+      "source_url": "https://mldata.lawson.co.jp/recommend/original/detail/1532771_1996.html",
+      "verified_at": "2026-10-11",
+      "status": "verified",
+      "allergens": [],
+      "source_evidence": "https://mldata.lawson.co.jp/recommend/original/detail/1532771_1996.html",
+      "reviewed_by": "ChatGPT (official nutrition listing)",
+      "region_note": "公式ページで価格・PFC確認。アレルゲン未確認のため除外設定時は候補から外す。"
+    },
+    {
+      "id": "family-bongo-tuna-egg-riceball-202610",
+      "chain": "family",
+      "name": "ぼんご監修　大きなおむすび　まぐろたくあんと卵黄醤油だれ",
+      "category": "staple",
+      "price": 321,
+      "kcal": 300,
+      "protein": 6.1,
+      "fat": 3.3,
+      "carbs": 62,
+      "source_url": "https://www.family.co.jp/goods/omusubi/0411998.html",
+      "verified_at": "2026-10-11",
+      "status": "verified",
+      "allergens": [
+        "小麦",
+        "卵",
+        "さば",
+        "大豆",
+        "りんご"
+      ],
+      "source_evidence": "https://www.family.co.jp/goods/omusubi/0411998.html",
+      "reviewed_by": "ChatGPT (official product listing)",
+      "region_note": "2026年10月6日発売。公式情報の価格・栄養・アレルゲンを記録。販売地域・店舗により取扱差あり。"
     }
   ]
 }

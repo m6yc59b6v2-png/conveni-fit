@@ -785,10 +785,10 @@
       "name": "たんぱく質が摂れる！豚しゃぶのサラダ",
       "category": "protein",
       "price": 498,
-      "kcal": 142,
-      "protein": 13.9,
-      "fat": 6.1,
-      "carbs": 8.6,
+      "kcal": 132,
+      "protein": 13.1,
+      "fat": 6.5,
+      "carbs": 5.9,
       "allergens": [
         "小麦",
         "卵",
@@ -798,12 +798,12 @@
         "豚肉",
         "りんご"
       ],
-      "source_url": "https://www.family.co.jp/goods/safety/goods080.html",
-      "verified_at": "2026-10-10",
+      "source_url": "https://www.family.co.jp/goods/salad/1210804.html",
+      "verified_at": "2026-10-11",
       "status": "verified",
-      "source_evidence": "https://www.family.co.jp/goods/safety/goods080.html",
+      "source_evidence": "https://www.family.co.jp/goods/salad/1210804.html",
       "reviewed_by": "ChatGPT (FamilyMart official allergen and nutrition table)",
-      "region_note": "地域・販売時期で仕様が変わる場合があります。商品ラベルを確認してください。"
+      "region_note": "公式個別商品ページに合わせて数値を更新。全国（一部店舗除く）、地域差あり。"
     },
     {
       "id": "family-pork-pasta-salad",

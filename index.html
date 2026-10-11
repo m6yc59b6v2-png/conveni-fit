@@ -132,10 +132,11 @@ function suggestOne(){
  $('result').innerHTML='<p class="warning">確認済み商品の組み合わせ例です。必要な栄養量を満たす保証はありません。アレルゲン・価格・在庫は必ず店頭表示をご確認ください。</p>'+
  '<div class="meal"><h3>'+escapeHtml(mealTime)+'のおすすめ</h3><ul>'+items.map(p=>'<li>'+escapeHtml(p.name)+'（'+names[p.chain]+'）</li>').join('')+'</ul><div class="totals">'+yen(selected.price)+' ／ '+macro+'</div></div>'+
  '<div class="stat"><strong>合計 '+yen(selected.price)+'</strong><p class="small">予算残り '+yen(budget-selected.price)+'。'+(items.length===2?'2品の組み合わせです。必要に応じて野菜なども追加してください。':'')+'</p></div>'+
- '<div class="actions"><button id="copy">買い物メモをコピー</button><button id="planSuggestedMeal" class="secondary">食べる予定に保存</button><button id="saveSuggestedMeal" class="secondary">食べたものとして記録</button><button class="secondary" id="another">もう一度提案</button></div>';
+ '<div class="meal"><label for="plannedMealDate">食べる予定の日付</label><input id="plannedMealDate" type="date" value="'+localDate()+'"></div><div class="actions"><button id="copy">買い物メモをコピー</button><button id="planSuggestedMeal" class="secondary">食べる予定に保存</button><button id="saveSuggestedMeal" class="secondary">食べたものとして記録</button><button class="secondary" id="another">もう一度提案</button></div>';
  $('copy').onclick=()=>{const memo=mealTime+': '+items.map(p=>p.name).join('、')+'\n合計 '+yen(selected.price);if(navigator.clipboard?.writeText)navigator.clipboard.writeText(memo).then(()=>alert('コピーしました')).catch(()=>prompt('こちらをコピーしてください',memo));else prompt('こちらをコピーしてください',memo);};
  $('planSuggestedMeal').onclick=()=>{
-  const plan={date:localDate(),meal:mealTime,items:items.map(p=>({id:p.id,name:p.name,kcal:p.kcal,protein:p.protein})),price:selected.price};
+  const plan={date:$('plannedMealDate').value,meal:mealTime,items:items.map(p=>({id:p.id,name:p.name,kcal:p.kcal,protein:p.protein})),price:selected.price};
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(plan.date)){alert('食べる予定の日付を選んでください。');return;}
   try{const plans=readMealPlans();const existing=plans.find(p=>p.date===plan.date&&p.meal===plan.meal);if(existing&&!confirm('同じ日・同じ食事の予定があります。上書きしますか？'))return;writeMealPlans([...plans.filter(p=>!(p.date===plan.date&&p.meal===plan.meal)),plan]);}
   catch(e){alert('予定を保存できませんでした。ブラウザの保存設定を確認してください。');return;}
   $('planSuggestedMeal').disabled=true;
